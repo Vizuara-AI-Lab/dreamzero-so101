@@ -7,11 +7,11 @@
     "prompt": "Pick the red cube",
     "prompt_kind": "training",
     "type": "dreamgen",
-    "duration_sec": 7.0,
+    "duration_sec": 3.6,
     "thumbnail": "gallery/ep000_train/thumbnail.jpg",
     "videos": {
-      "front":   "gallery/ep000_train/rollout_front.mp4",
-      "top":     "gallery/ep000_train/rollout_top.mp4",
+      "front": "gallery/ep000_train/rollout_front.mp4",
+      "top": "gallery/ep000_train/rollout_top.mp4",
       "gripper": "gallery/ep000_train/rollout_gripper.mp4"
     },
     "best_match_drift_deg": 94,
@@ -25,11 +25,11 @@
     "prompt": "Pick the blue cube",
     "prompt_kind": "novel prompt",
     "type": "dreamgen",
-    "duration_sec": 7.0,
+    "duration_sec": 3.6,
     "thumbnail": "gallery/ep000_novel/thumbnail.jpg",
     "videos": {
-      "front":   "gallery/ep000_novel/rollout_front.mp4",
-      "top":     "gallery/ep000_novel/rollout_top.mp4",
+      "front": "gallery/ep000_novel/rollout_front.mp4",
+      "top": "gallery/ep000_novel/rollout_top.mp4",
       "gripper": "gallery/ep000_novel/rollout_gripper.mp4"
     },
     "best_match_drift_deg": 90,
@@ -39,15 +39,15 @@
     "tag": "ep000_policy",
     "episode": 0,
     "category": "simple-pick",
-    "task_summary": "simple pick — training episode",
+    "task_summary": "simple pick \u2014 training episode",
     "prompt": "Pick the red cube",
     "prompt_kind": "training",
     "type": "policy",
     "duration_sec": 3.0,
     "thumbnail": "demo/train_ep0/input_front.jpg",
     "videos": {
-      "front":   "demo/train_ep0/pred_front_slow.mp4",
-      "top":     "demo/train_ep0/pred_top_slow.mp4",
+      "front": "demo/train_ep0/pred_front_slow.mp4",
+      "top": "demo/train_ep0/pred_top_slow.mp4",
       "gripper": "demo/train_ep0/pred_gripper_slow.mp4"
     },
     "action_rmse_deg": 0.57
@@ -56,15 +56,15 @@
     "tag": "ep050_policy",
     "episode": 50,
     "category": "simple-pick",
-    "task_summary": "simple pick — held-out episode 50",
+    "task_summary": "simple pick \u2014 held-out episode 50",
     "prompt": "Pick the red cube",
     "prompt_kind": "held-out",
     "type": "policy",
     "duration_sec": 3.0,
     "thumbnail": "demo/heldout_ep50/input_front.jpg",
     "videos": {
-      "front":   "demo/heldout_ep50/pred_front_slow.mp4",
-      "top":     "demo/heldout_ep50/pred_top_slow.mp4",
+      "front": "demo/heldout_ep50/pred_front_slow.mp4",
+      "top": "demo/heldout_ep50/pred_top_slow.mp4",
       "gripper": "demo/heldout_ep50/pred_gripper_slow.mp4"
     },
     "action_rmse_deg": 2.29
@@ -73,15 +73,15 @@
     "tag": "ep100_policy",
     "episode": 100,
     "category": "simple-pick",
-    "task_summary": "simple pick — held-out episode 100",
+    "task_summary": "simple pick \u2014 held-out episode 100",
     "prompt": "Pick the red cube",
     "prompt_kind": "held-out",
     "type": "policy",
     "duration_sec": 3.0,
     "thumbnail": "demo/heldout_ep100/input_front.jpg",
     "videos": {
-      "front":   "demo/heldout_ep100/pred_front_slow.mp4",
-      "top":     "demo/heldout_ep100/pred_top_slow.mp4",
+      "front": "demo/heldout_ep100/pred_front_slow.mp4",
+      "top": "demo/heldout_ep100/pred_top_slow.mp4",
       "gripper": "demo/heldout_ep100/pred_gripper_slow.mp4"
     },
     "action_rmse_deg": 1.6
@@ -90,15 +90,15 @@
     "tag": "ep050_f80",
     "episode": 50,
     "category": "mid-episode",
-    "task_summary": "mid-episode resume — descend phase",
+    "task_summary": "mid-episode resume \u2014 descend phase",
     "prompt": "Pick the red cube",
-    "prompt_kind": "phase · descend",
+    "prompt_kind": "phase \u00b7 descend",
     "type": "policy",
     "duration_sec": 3.0,
     "thumbnail": "demo_mid/ep50_f80_descend/input_front.jpg",
     "videos": {
-      "front":   "demo_mid/ep50_f80_descend/pred_front_slow.mp4",
-      "top":     "demo_mid/ep50_f80_descend/pred_top_slow.mp4",
+      "front": "demo_mid/ep50_f80_descend/pred_front_slow.mp4",
+      "top": "demo_mid/ep50_f80_descend/pred_top_slow.mp4",
       "gripper": "demo_mid/ep50_f80_descend/pred_gripper_slow.mp4"
     },
     "action_rmse_deg": 11.97
@@ -107,15 +107,15 @@
     "tag": "ep050_f150",
     "episode": 50,
     "category": "mid-episode",
-    "task_summary": "mid-episode resume — grasp phase",
+    "task_summary": "mid-episode resume \u2014 grasp phase",
     "prompt": "Pick the red cube",
-    "prompt_kind": "phase · grasp",
+    "prompt_kind": "phase \u00b7 grasp",
     "type": "policy",
     "duration_sec": 3.0,
     "thumbnail": "demo_mid/ep50_f150_grasp/input_front.jpg",
     "videos": {
-      "front":   "demo_mid/ep50_f150_grasp/pred_front_slow.mp4",
-      "top":     "demo_mid/ep50_f150_grasp/pred_top_slow.mp4",
+      "front": "demo_mid/ep50_f150_grasp/pred_front_slow.mp4",
+      "top": "demo_mid/ep50_f150_grasp/pred_top_slow.mp4",
       "gripper": "demo_mid/ep50_f150_grasp/pred_gripper_slow.mp4"
     },
     "action_rmse_deg": 8.4
@@ -124,15 +124,15 @@
     "tag": "ep050_f220",
     "episode": 50,
     "category": "mid-episode",
-    "task_summary": "mid-episode resume — lift phase",
+    "task_summary": "mid-episode resume \u2014 lift phase",
     "prompt": "Pick the red cube",
-    "prompt_kind": "phase · lift",
+    "prompt_kind": "phase \u00b7 lift",
     "type": "policy",
     "duration_sec": 3.0,
     "thumbnail": "demo_mid/ep50_f220_lift/input_front.jpg",
     "videos": {
-      "front":   "demo_mid/ep50_f220_lift/pred_front_slow.mp4",
-      "top":     "demo_mid/ep50_f220_lift/pred_top_slow.mp4",
+      "front": "demo_mid/ep50_f220_lift/pred_front_slow.mp4",
+      "top": "demo_mid/ep50_f220_lift/pred_top_slow.mp4",
       "gripper": "demo_mid/ep50_f220_lift/pred_gripper_slow.mp4"
     },
     "action_rmse_deg": 6.1
@@ -141,15 +141,15 @@
     "tag": "ep100_f80",
     "episode": 100,
     "category": "mid-episode",
-    "task_summary": "mid-episode resume — descend phase",
+    "task_summary": "mid-episode resume \u2014 descend phase",
     "prompt": "Pick the red cube",
-    "prompt_kind": "phase · descend",
+    "prompt_kind": "phase \u00b7 descend",
     "type": "policy",
     "duration_sec": 3.0,
     "thumbnail": "demo_mid/ep100_f80_descend/input_front.jpg",
     "videos": {
-      "front":   "demo_mid/ep100_f80_descend/pred_front_slow.mp4",
-      "top":     "demo_mid/ep100_f80_descend/pred_top_slow.mp4",
+      "front": "demo_mid/ep100_f80_descend/pred_front_slow.mp4",
+      "top": "demo_mid/ep100_f80_descend/pred_top_slow.mp4",
       "gripper": "demo_mid/ep100_f80_descend/pred_gripper_slow.mp4"
     },
     "action_rmse_deg": 9.2
@@ -158,15 +158,15 @@
     "tag": "ep100_f150",
     "episode": 100,
     "category": "mid-episode",
-    "task_summary": "mid-episode resume — grasp phase",
+    "task_summary": "mid-episode resume \u2014 grasp phase",
     "prompt": "Pick the red cube",
-    "prompt_kind": "phase · grasp",
+    "prompt_kind": "phase \u00b7 grasp",
     "type": "policy",
     "duration_sec": 3.0,
     "thumbnail": "demo_mid/ep100_f150_grasp/input_front.jpg",
     "videos": {
-      "front":   "demo_mid/ep100_f150_grasp/pred_front_slow.mp4",
-      "top":     "demo_mid/ep100_f150_grasp/pred_top_slow.mp4",
+      "front": "demo_mid/ep100_f150_grasp/pred_front_slow.mp4",
+      "top": "demo_mid/ep100_f150_grasp/pred_top_slow.mp4",
       "gripper": "demo_mid/ep100_f150_grasp/pred_gripper_slow.mp4"
     },
     "action_rmse_deg": 8.4
@@ -175,15 +175,15 @@
     "tag": "ep100_f220",
     "episode": 100,
     "category": "mid-episode",
-    "task_summary": "mid-episode resume — lift phase",
+    "task_summary": "mid-episode resume \u2014 lift phase",
     "prompt": "Pick the red cube",
-    "prompt_kind": "phase · lift",
+    "prompt_kind": "phase \u00b7 lift",
     "type": "policy",
     "duration_sec": 3.0,
     "thumbnail": "demo_mid/ep100_f220_lift/input_front.jpg",
     "videos": {
-      "front":   "demo_mid/ep100_f220_lift/pred_front_slow.mp4",
-      "top":     "demo_mid/ep100_f220_lift/pred_top_slow.mp4",
+      "front": "demo_mid/ep100_f220_lift/pred_front_slow.mp4",
+      "top": "demo_mid/ep100_f220_lift/pred_top_slow.mp4",
       "gripper": "demo_mid/ep100_f220_lift/pred_gripper_slow.mp4"
     },
     "action_rmse_deg": 5.3
@@ -192,15 +192,15 @@
     "tag": "ep245_train",
     "episode": 245,
     "category": "pick-place",
-    "task_summary": "pick and place (red cube → bowl)",
+    "task_summary": "pick and place (red cube \u2192 bowl)",
     "prompt": "Pick the red cube and place it in the bowl",
     "prompt_kind": "training",
     "type": "dreamgen",
-    "duration_sec": 12.0,
+    "duration_sec": 5.8,
     "thumbnail": "gallery/ep245_train/thumbnail.jpg",
     "videos": {
-      "front":   "gallery/ep245_train/rollout_front.mp4",
-      "top":     "gallery/ep245_train/rollout_top.mp4",
+      "front": "gallery/ep245_train/rollout_front.mp4",
+      "top": "gallery/ep245_train/rollout_top.mp4",
       "gripper": "gallery/ep245_train/rollout_gripper.mp4"
     },
     "best_match_drift_deg": 74,
@@ -210,15 +210,15 @@
     "tag": "ep245_novel",
     "episode": 245,
     "category": "language-novel",
-    "task_summary": "pick and place (red cube → bowl)",
+    "task_summary": "pick and place (red cube \u2192 bowl)",
     "prompt": "Pick the yellow cube and place it in the bowl",
     "prompt_kind": "novel prompt",
     "type": "dreamgen",
-    "duration_sec": 12.0,
+    "duration_sec": 5.8,
     "thumbnail": "gallery/ep245_novel/thumbnail.jpg",
     "videos": {
-      "front":   "gallery/ep245_novel/rollout_front.mp4",
-      "top":     "gallery/ep245_novel/rollout_top.mp4",
+      "front": "gallery/ep245_novel/rollout_front.mp4",
+      "top": "gallery/ep245_novel/rollout_top.mp4",
       "gripper": "gallery/ep245_novel/rollout_gripper.mp4"
     },
     "best_match_drift_deg": 85,
@@ -232,11 +232,11 @@
     "prompt": "Put the red cube on top of the blue cube",
     "prompt_kind": "training",
     "type": "dreamgen",
-    "duration_sec": 12.0,
+    "duration_sec": 5.5,
     "thumbnail": "gallery/ep206_train/thumbnail.jpg",
     "videos": {
-      "front":   "gallery/ep206_train/rollout_front.mp4",
-      "top":     "gallery/ep206_train/rollout_top.mp4",
+      "front": "gallery/ep206_train/rollout_front.mp4",
+      "top": "gallery/ep206_train/rollout_top.mp4",
       "gripper": "gallery/ep206_train/rollout_gripper.mp4"
     },
     "best_match_drift_deg": 71,
@@ -250,11 +250,11 @@
     "prompt": "Put the blue cube on top of the red cube",
     "prompt_kind": "novel prompt",
     "type": "dreamgen",
-    "duration_sec": 12.0,
+    "duration_sec": 5.5,
     "thumbnail": "gallery/ep206_novel/thumbnail.jpg",
     "videos": {
-      "front":   "gallery/ep206_novel/rollout_front.mp4",
-      "top":     "gallery/ep206_novel/rollout_top.mp4",
+      "front": "gallery/ep206_novel/rollout_front.mp4",
+      "top": "gallery/ep206_novel/rollout_top.mp4",
       "gripper": "gallery/ep206_novel/rollout_gripper.mp4"
     },
     "best_match_drift_deg": 83,
@@ -264,32 +264,32 @@
     "tag": "zs_f000",
     "episode": 9000,
     "category": "zero-shot",
-    "task_summary": "UNSEEN dataset — box → red bowl",
+    "task_summary": "unseen dataset \u2014 box to red bowl",
     "prompt": "Pick up the box and place it in the red bowl",
-    "prompt_kind": "zero-shot · frame 0",
+    "prompt_kind": "zero-shot \u00b7 frame 0",
     "type": "zeroshot",
     "duration_sec": 3.0,
     "thumbnail": "zeroshot_chunk/f000/input_webcam.jpg",
     "videos": {
-      "front":   "zeroshot_chunk/f000/pred_front.mp4",
-      "top":     "zeroshot_chunk/f000/pred_top.mp4",
+      "front": "zeroshot_chunk/f000/pred_front.mp4",
+      "top": "zeroshot_chunk/f000/pred_top.mp4",
       "gripper": "zeroshot_chunk/f000/pred_gripper.mp4"
     },
-    "action_rmse_deg": 15.70
+    "action_rmse_deg": 15.7
   },
   {
     "tag": "zs_f084",
     "episode": 9000,
     "category": "zero-shot",
-    "task_summary": "UNSEEN dataset — box → red bowl",
+    "task_summary": "unseen dataset \u2014 box to red bowl",
     "prompt": "Pick up the box and place it in the red bowl",
-    "prompt_kind": "zero-shot · frame 84",
+    "prompt_kind": "zero-shot \u00b7 frame 84",
     "type": "zeroshot",
     "duration_sec": 3.0,
     "thumbnail": "zeroshot_chunk/f084/input_webcam.jpg",
     "videos": {
-      "front":   "zeroshot_chunk/f084/pred_front.mp4",
-      "top":     "zeroshot_chunk/f084/pred_top.mp4",
+      "front": "zeroshot_chunk/f084/pred_front.mp4",
+      "top": "zeroshot_chunk/f084/pred_top.mp4",
       "gripper": "zeroshot_chunk/f084/pred_gripper.mp4"
     },
     "action_rmse_deg": 1.57
@@ -298,15 +298,15 @@
     "tag": "zs_f169",
     "episode": 9000,
     "category": "zero-shot",
-    "task_summary": "UNSEEN dataset — box → red bowl",
+    "task_summary": "unseen dataset \u2014 box to red bowl",
     "prompt": "Pick up the box and place it in the red bowl",
-    "prompt_kind": "zero-shot · frame 169",
+    "prompt_kind": "zero-shot \u00b7 frame 169",
     "type": "zeroshot",
     "duration_sec": 3.0,
     "thumbnail": "zeroshot_chunk/f169/input_webcam.jpg",
     "videos": {
-      "front":   "zeroshot_chunk/f169/pred_front.mp4",
-      "top":     "zeroshot_chunk/f169/pred_top.mp4",
+      "front": "zeroshot_chunk/f169/pred_front.mp4",
+      "top": "zeroshot_chunk/f169/pred_top.mp4",
       "gripper": "zeroshot_chunk/f169/pred_gripper.mp4"
     },
     "action_rmse_deg": 19.61
@@ -315,15 +315,15 @@
     "tag": "zs_f254",
     "episode": 9000,
     "category": "zero-shot",
-    "task_summary": "UNSEEN dataset — box → red bowl",
+    "task_summary": "unseen dataset \u2014 box to red bowl",
     "prompt": "Pick up the box and place it in the red bowl",
-    "prompt_kind": "zero-shot · frame 254",
+    "prompt_kind": "zero-shot \u00b7 frame 254",
     "type": "zeroshot",
     "duration_sec": 3.0,
     "thumbnail": "zeroshot_chunk/f254/input_webcam.jpg",
     "videos": {
-      "front":   "zeroshot_chunk/f254/pred_front.mp4",
-      "top":     "zeroshot_chunk/f254/pred_top.mp4",
+      "front": "zeroshot_chunk/f254/pred_front.mp4",
+      "top": "zeroshot_chunk/f254/pred_top.mp4",
       "gripper": "zeroshot_chunk/f254/pred_gripper.mp4"
     },
     "action_rmse_deg": 2.31
@@ -332,66 +332,66 @@
     "tag": "zs_f339",
     "episode": 9000,
     "category": "zero-shot",
-    "task_summary": "UNSEEN dataset — box → red bowl",
+    "task_summary": "unseen dataset \u2014 box to red bowl",
     "prompt": "Pick up the box and place it in the red bowl",
-    "prompt_kind": "zero-shot · frame 339",
+    "prompt_kind": "zero-shot \u00b7 frame 339",
     "type": "zeroshot",
     "duration_sec": 3.0,
     "thumbnail": "zeroshot_chunk/f339/input_webcam.jpg",
     "videos": {
-      "front":   "zeroshot_chunk/f339/pred_front.mp4",
-      "top":     "zeroshot_chunk/f339/pred_top.mp4",
+      "front": "zeroshot_chunk/f339/pred_front.mp4",
+      "top": "zeroshot_chunk/f339/pred_top.mp4",
       "gripper": "zeroshot_chunk/f339/pred_gripper.mp4"
     },
-    "action_rmse_deg": 16.40
+    "action_rmse_deg": 16.4
   },
   {
     "tag": "zs_f424",
     "episode": 9000,
     "category": "zero-shot",
-    "task_summary": "UNSEEN dataset — box → red bowl",
+    "task_summary": "unseen dataset \u2014 box to red bowl",
     "prompt": "Pick up the box and place it in the red bowl",
-    "prompt_kind": "zero-shot · frame 424",
+    "prompt_kind": "zero-shot \u00b7 frame 424",
     "type": "zeroshot",
     "duration_sec": 3.0,
     "thumbnail": "zeroshot_chunk/f424/input_webcam.jpg",
     "videos": {
-      "front":   "zeroshot_chunk/f424/pred_front.mp4",
-      "top":     "zeroshot_chunk/f424/pred_top.mp4",
+      "front": "zeroshot_chunk/f424/pred_front.mp4",
+      "top": "zeroshot_chunk/f424/pred_top.mp4",
       "gripper": "zeroshot_chunk/f424/pred_gripper.mp4"
     },
-    "action_rmse_deg": 11.20
+    "action_rmse_deg": 11.2
   },
   {
     "tag": "zs_f509",
     "episode": 9000,
     "category": "zero-shot",
-    "task_summary": "UNSEEN dataset — box → red bowl",
+    "task_summary": "unseen dataset \u2014 box to red bowl",
     "prompt": "Pick up the box and place it in the red bowl",
-    "prompt_kind": "zero-shot · frame 509",
+    "prompt_kind": "zero-shot \u00b7 frame 509",
     "type": "zeroshot",
     "duration_sec": 3.0,
     "thumbnail": "zeroshot_chunk/f509/input_webcam.jpg",
     "videos": {
-      "front":   "zeroshot_chunk/f509/pred_front.mp4",
-      "top":     "zeroshot_chunk/f509/pred_top.mp4",
+      "front": "zeroshot_chunk/f509/pred_front.mp4",
+      "top": "zeroshot_chunk/f509/pred_top.mp4",
       "gripper": "zeroshot_chunk/f509/pred_gripper.mp4"
     },
-    "action_rmse_deg": 26.70
+    "action_rmse_deg": 26.7
   },
   {
     "tag": "zs_f594",
     "episode": 9000,
     "category": "zero-shot",
-    "task_summary": "UNSEEN dataset — box → red bowl",
+    "task_summary": "unseen dataset \u2014 box to red bowl",
     "prompt": "Pick up the box and place it in the red bowl",
-    "prompt_kind": "zero-shot · frame 594",
+    "prompt_kind": "zero-shot \u00b7 frame 594",
     "type": "zeroshot",
     "duration_sec": 3.0,
     "thumbnail": "zeroshot_chunk/f594/input_webcam.jpg",
     "videos": {
-      "front":   "zeroshot_chunk/f594/pred_front.mp4",
-      "top":     "zeroshot_chunk/f594/pred_top.mp4",
+      "front": "zeroshot_chunk/f594/pred_front.mp4",
+      "top": "zeroshot_chunk/f594/pred_top.mp4",
       "gripper": "zeroshot_chunk/f594/pred_gripper.mp4"
     },
     "action_rmse_deg": 1.75

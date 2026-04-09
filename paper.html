@@ -378,7 +378,7 @@
 
   <h3>5.2 DreamGen Autoregressive Rollouts</h3>
   <p>
-    Table 2 shows the honest drift metrics for all six DreamGen rollouts. The best-match drift ranges
+    Table 2 shows the drift metrics for all six DreamGen rollouts. The best-match drift ranges
     from 71° (ep206_train) to 94° (ep000_train); the time-aligned drift is consistently 15–35° higher,
     confirming that speed mismatch and post-episode continuation are the dominant sources of reported
     drift. Visually, all six rollouts complete the intended task — pick, pick-and-place, or cube stacking
@@ -405,7 +405,7 @@
     <figcaption><strong>Figure 4.</strong> The DreamGen autoregressive loop (left) and the post-task degradation failure mode (right). After the real episode ends (marked in red), the model continues imagining but without ground-truth supervision, producing increasingly incoherent motion. Adding a learned task-completion token is a direct fix.</figcaption>
   </figure>
 
-  <h3>5.3 Honest Metrics Analysis</h3>
+  <h3>5.3 Drift Analysis</h3>
   <p>
     The 20–35° gap between best-match and time-aligned drift is not model failure — it is a measurement
     artefact. When the real episode is 10.9 s and the imagined rollout continues to 18 s, the

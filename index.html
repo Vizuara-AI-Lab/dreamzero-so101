@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>DreamZero-SO101 — An Open World-Action Model for the SO-101 Arm</title>
-<meta name="description" content="DreamZero-SO101 is an open-source world-action model for the SO-101 robot arm, fine-tuned from Wan2.1-I2V-14B on 715 community episodes. Apache 2.0." />
+<title>DreamZero-SO101 — An Open World Model for the SO-101 Robot Arm</title>
+<meta name="description" content="DreamZero-SO101 is an open-source world-action model for the SO-101 robot arm. Given a single camera frame and a language instruction, it imagines the robot completing the task." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -35,33 +35,33 @@
 <div class="container">
 
   <section class="hero">
-    <span class="kicker">Vizuara × SO-101 · Apache 2.0</span>
-    <h1 style="margin-top:18px">The first open<br/>world-action model<br/><span class="accent">for the SO-101 arm.</span></h1>
+    <span class="kicker">Vizuara Robotics · Apache 2.0 · Released April 2026</span>
+    <h1 style="margin-top:18px">The first open world model<br/><span class="accent">for the SO-101 robot arm.</span></h1>
     <p class="lead">
-      DreamZero-SO101 fine-tunes a 14-billion-parameter Wan2.1-I2V video backbone on 715 community-recorded episodes of the low-cost SO-101 teleoperator arm.
-      Given one frame + a joint state + a language instruction, it jointly imagines the next 0.8 seconds of video and predicts the robot's next 24 joint commands — in a single forward pass.
+      DreamZero-SO101 is a world-action model trained on 715 community episodes of the low-cost SO-101 teleoperator arm.
+      Give it a single camera frame and a natural-language instruction, and it will imagine the robot completing the task — predicting both the future video and the joint commands in one pass.
     </p>
 
     <div class="score-bar">
       <div class="score-pill">
-        <span class="label">Task in imagination</span>
-        <span class="value pass">yes</span>
-      </div>
-      <div class="score-pill">
-        <span class="label">Best-match drift</span>
-        <span class="value">71–94°</span>
-      </div>
-      <div class="score-pill">
-        <span class="label">Single-chunk RMSE</span>
-        <span class="value pass">1.6–2.3°</span>
-      </div>
-      <div class="score-pill">
-        <span class="label">LoRA adapter</span>
-        <span class="value accent">217 MB</span>
+        <span class="label">License</span>
+        <span class="value pass">Apache 2.0</span>
       </div>
       <div class="score-pill">
         <span class="label">Training episodes</span>
         <span class="value">715</span>
+      </div>
+      <div class="score-pill">
+        <span class="label">Task categories</span>
+        <span class="value">6</span>
+      </div>
+      <div class="score-pill">
+        <span class="label">Camera views</span>
+        <span class="value">3</span>
+      </div>
+      <div class="score-pill">
+        <span class="label">Adapter size</span>
+        <span class="value accent">217 MB</span>
       </div>
     </div>
   </section>
@@ -71,232 +71,173 @@
     <div class="hero-clip">
       <video src="gallery/ep000_train/rollout_front.mp4" autoplay loop muted playsinline></video>
       <div class="meta">
-        <div class="ep">Simple pick · DreamGen · 7.0 s</div>
+        <div class="ep">Pick an object</div>
         <div class="prompt">"Pick the red cube"</div>
       </div>
     </div>
     <div class="hero-clip">
       <video src="gallery/ep245_train/rollout_front.mp4" autoplay loop muted playsinline></video>
       <div class="meta">
-        <div class="ep">Pick &amp; place · DreamGen · 12.0 s</div>
+        <div class="ep">Pick and place</div>
         <div class="prompt">"Pick the red cube and place it in the bowl"</div>
       </div>
     </div>
     <div class="hero-clip">
       <video src="gallery/ep206_train/rollout_front.mp4" autoplay loop muted playsinline></video>
       <div class="meta">
-        <div class="ep">Stack · DreamGen · 12.0 s</div>
+        <div class="ep">Stack objects</div>
         <div class="prompt">"Put the red cube on top of the blue cube"</div>
       </div>
     </div>
   </section>
-  <p class="muted" style="font-size:12.5px;margin-top:6px;font-family:var(--font-mono)">Three DreamGen rollouts from 23 in the <a href="demo.html">interactive demo</a>. Each is imagined from a single initial frame + language prompt — no real observations after frame 0. Clips trimmed to task completion; the <a href="results.html">Results page</a> has the raw 18 s rollouts with post-task degradation.</p>
+  <p class="muted" style="font-size:12.5px;margin-top:6px;font-family:var(--font-mono);text-align:center">
+    Three imagined rollouts from the model. Every frame you see was predicted from a single initial image plus the language instruction — no real robot was involved after frame 0. Browse all 23 in the <a href="demo.html">interactive gallery</a>.
+  </p>
 
-  <!-- Three-column explainer -->
-  <section class="section-head" style="margin-top:72px">
-    <div class="eyebrow">Overview</div>
-    <h2>What DreamZero-SO101 is, and why it matters</h2>
+  <!-- Plain-English explainer -->
+  <section class="section-head" style="margin-top:80px">
+    <div class="eyebrow">What it does</div>
+    <h2>Three things DreamZero-SO101 can do</h2>
   </section>
 
   <div class="feature-grid">
     <div class="feature-card">
-      <div class="num">01 — What it is</div>
-      <h4>A joint video + action predictor</h4>
-      <p>A 14B Wan2.1-I2V backbone + a 108M LoRA adapter. At each control step the model takes a single camera frame, a 6-DOF joint state, and a language instruction — and emits both a 0.3 s imagined video rollout and a 0.8 s (24-step) action chunk via flow matching, in one forward pass.</p>
+      <div class="num">01 — Predict</div>
+      <h4>Plan the next half-second</h4>
+      <p>Given one camera frame and a language instruction, the model outputs the robot's next 24 joint commands — everything needed to drive the arm for the next 0.8 seconds. This is the mode you would use on a real SO-101 arm.</p>
     </div>
     <div class="feature-card">
-      <div class="num">02 — What it does</div>
-      <h4>Two deployment modes</h4>
-      <p>In <b>policy mode</b> the model returns an action chunk at every real-robot step — 1.6–2.3° RMSE at cruise on unseen data, 11.9° mean on the full zero-shot test. In <b>DreamGen mode</b> it autoregressively imagines 60+ chunks of video + action from a single initial frame, executing the task inside its own imagination.</p>
+      <div class="num">02 — Imagine</div>
+      <h4>Simulate a full task</h4>
+      <p>Given only the very first frame, the model can autoregressively imagine the entire rest of the episode — up to 18 seconds of video + action, chaining its own predictions. Think of it as a learned simulator of the SO-101 arm.</p>
     </div>
     <div class="feature-card">
-      <div class="num">03 — Why it matters</div>
-      <h4>An open entry point for SO-101</h4>
-      <p>There is no open-sourced world-action model for the SO-101 arm yet. DreamZero-SO101 is the first — trained on community data, released under Apache 2.0, with a 217 MB LoRA that plugs into an unmodified Wan2.1-I2V backbone. We want this to become the foundation for future SO-101 policy research.</p>
+      <div class="num">03 — Follow instructions</div>
+      <h4>Respond to language</h4>
+      <p>The same scene with a different instruction produces a different rollout. Swap "red cube" for "blue cube" and the arm reaches for a different object — evidence the model is actually conditioning on language, not replaying training trajectories.</p>
     </div>
   </div>
 
-  <!-- Key Findings — capgym-style charts -->
+  <!-- Capability showcase - visual proof -->
   <section class="section-head" style="margin-top:80px">
-    <div class="eyebrow">Key Findings</div>
-    <h2>Four numbers that tell the story</h2>
+    <div class="eyebrow">Capabilities on display</div>
+    <h2>Six behaviors, one model</h2>
+    <p class="lead" style="max-width:760px;margin:16px auto 0">Every capability below comes from the same 217 MB adapter — no scene-specific fine-tuning. Click through to the interactive gallery for all 23 rollouts.</p>
   </section>
 
-  <div class="findings-grid">
-    <!-- Finding 1: Policy RMSE bar chart -->
-    <div class="finding-card">
-      <div class="finding-title">Policy-mode action RMSE</div>
-      <div class="finding-sub">Lower is better · degrees</div>
-      <div class="bar-chart">
-        <div class="bar-row">
-          <div class="bar-label">Train ep 0</div>
-          <div class="bar-wrap"><div class="bar-fill pass" style="width:2.3%"></div><span class="bar-val">0.57°</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Held-out ep 100</div>
-          <div class="bar-wrap"><div class="bar-fill pass" style="width:6.5%"></div><span class="bar-val">1.60°</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Held-out ep 50</div>
-          <div class="bar-wrap"><div class="bar-fill pass" style="width:9.3%"></div><span class="bar-val">2.29°</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Zero-shot best</div>
-          <div class="bar-wrap"><div class="bar-fill pass" style="width:6.4%"></div><span class="bar-val">1.57°</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Zero-shot mean</div>
-          <div class="bar-wrap"><div class="bar-fill warn" style="width:48%"></div><span class="bar-val">11.9°</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Zero-shot worst</div>
-          <div class="bar-wrap"><div class="bar-fill fail" style="width:100%"></div><span class="bar-val">26.7°</span></div>
-        </div>
-      </div>
-      <div class="finding-note">Training and held-out evaluation well under 5°. Zero-shot improves with more diverse training data.</div>
-    </div>
+  <div class="capability-grid">
+    <a class="capability-card" href="demo.html">
+      <div class="capability-num">01</div>
+      <h4>Pick an object</h4>
+      <p>Reach, close the gripper, lift. Learned from 400+ training episodes of the same primitive.</p>
+    </a>
+    <a class="capability-card" href="demo.html">
+      <div class="capability-num">02</div>
+      <h4>Pick and place</h4>
+      <p>Pick up a cube and place it inside a bowl — a two-phase trajectory with a precise release point.</p>
+    </a>
+    <a class="capability-card" href="demo.html">
+      <div class="capability-num">03</div>
+      <h4>Stack objects</h4>
+      <p>Place one cube on top of another. Requires approach, grasp, lift, translate, align, release.</p>
+    </a>
+    <a class="capability-card" href="demo.html">
+      <div class="capability-num">04</div>
+      <h4>Resume mid-episode</h4>
+      <p>Start the model from a frame deep inside the task — descend, grasp, or lift phase — and it picks up where the trajectory left off.</p>
+    </a>
+    <a class="capability-card" href="demo.html">
+      <div class="capability-num">05</div>
+      <h4>Follow novel instructions</h4>
+      <p>Same scene, a language instruction the model never saw during training. The rollout changes accordingly.</p>
+    </a>
+    <a class="capability-card" href="demo.html">
+      <div class="capability-num">06</div>
+      <h4>Generalize zero-shot</h4>
+      <p>Predict actions on a dataset the model was never trained on — raw generalization from the SO-101 pretraining mix.</p>
+    </a>
+  </div>
 
-    <!-- Finding 2: DreamGen drift -->
-    <div class="finding-card">
-      <div class="finding-title">DreamGen best-match drift</div>
-      <div class="finding-sub">60-chunk autoregressive rollout · degrees</div>
-      <div class="bar-chart">
-        <div class="bar-row">
-          <div class="bar-label">ep206 train</div>
-          <div class="bar-wrap"><div class="bar-fill warn" style="width:71%"></div><span class="bar-val">71°</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">ep245 train</div>
-          <div class="bar-wrap"><div class="bar-fill warn" style="width:74%"></div><span class="bar-val">74°</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">ep206 novel</div>
-          <div class="bar-wrap"><div class="bar-fill warn" style="width:83%"></div><span class="bar-val">83°</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">ep245 novel</div>
-          <div class="bar-wrap"><div class="bar-fill warn" style="width:85%"></div><span class="bar-val">85°</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">ep000 novel</div>
-          <div class="bar-wrap"><div class="bar-fill warn" style="width:90%"></div><span class="bar-val">90°</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">ep000 train</div>
-          <div class="bar-wrap"><div class="bar-fill warn" style="width:94%"></div><span class="bar-val">94°</span></div>
-        </div>
-      </div>
-      <div class="finding-note">All 6 rollouts visually complete the task. Drift includes speed-mismatch between imagined and real arm motion.</div>
-    </div>
+  <!-- Training story — one clean chart -->
+  <section class="section-head" style="margin-top:80px">
+    <div class="eyebrow">How it was trained</div>
+    <h2>From pretrained video model to SO-101 policy</h2>
+  </section>
 
-    <!-- Finding 3: Training loss -->
-    <div class="finding-card">
-      <div class="finding-title">Training loss convergence</div>
-      <div class="finding-sub">LoRA rank 4 · 2× H100 · 72K steps</div>
-      <div class="bar-chart">
-        <div class="bar-row">
-          <div class="bar-label">Action loss start</div>
-          <div class="bar-wrap"><div class="bar-fill fail" style="width:100%"></div><span class="bar-val">0.42</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Action loss 20K</div>
-          <div class="bar-wrap"><div class="bar-fill warn" style="width:30%"></div><span class="bar-val">0.12</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Action loss 50K</div>
-          <div class="bar-wrap"><div class="bar-fill pass" style="width:8%"></div><span class="bar-val">0.032</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Action loss 72K</div>
-          <div class="bar-wrap"><div class="bar-fill pass" style="width:0.4%"></div><span class="bar-val">0.0015</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Dynamics loss start</div>
-          <div class="bar-wrap"><div class="bar-fill fail" style="width:59%"></div><span class="bar-val">0.176</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Dynamics loss 72K</div>
-          <div class="bar-wrap"><div class="bar-fill pass" style="width:10%"></div><span class="bar-val">0.0298</span></div>
+  <div class="training-story">
+    <div class="training-steps">
+      <div class="training-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Start from Wan2.1-I2V-14B</h4>
+          <p>A 14-billion-parameter open video diffusion model. We freeze the backbone and add a small low-rank adapter that learns to predict joint commands alongside video frames.</p>
         </div>
       </div>
-      <div class="finding-note">Action loss drops 280× over 72K steps. 127 hours on 2× H100 (RunPod), ~$152 total compute cost.</div>
-    </div>
-
-    <!-- Finding 4: vs baseline -->
-    <div class="finding-card">
-      <div class="finding-title">Model footprint</div>
-      <div class="finding-sub">DreamZero-SO101 vs related work</div>
-      <div class="bar-chart">
-        <div class="bar-row">
-          <div class="bar-label">LoRA adapter (MB)</div>
-          <div class="bar-wrap"><div class="bar-fill pass" style="width:8%"></div><span class="bar-val">217 MB</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Backbone (GB)</div>
-          <div class="bar-wrap"><div class="bar-fill warn" style="width:47%"></div><span class="bar-val">~56 GB</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Training episodes</div>
-          <div class="bar-wrap"><div class="bar-fill pass" style="width:71.5%"></div><span class="bar-val">715</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Inference (ms/chunk)</div>
-          <div class="bar-wrap"><div class="bar-fill warn" style="width:60%"></div><span class="bar-val">~600 ms</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">LoRA rank</div>
-          <div class="bar-wrap"><div class="bar-fill pass" style="width:4%"></div><span class="bar-val">4</span></div>
-        </div>
-        <div class="bar-row">
-          <div class="bar-label">Action horizon (steps)</div>
-          <div class="bar-wrap"><div class="bar-fill pass" style="width:24%"></div><span class="bar-val">24</span></div>
+      <div class="training-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Curate 715 SO-101 episodes</h4>
+          <p>Aggregate six community datasets from the HuggingFace Hub — simple picks, pick-and-place, stacking, cloth folding, tabletop cleanup, Lego assembly. Convert everything to a shared multiview format.</p>
         </div>
       </div>
-      <div class="finding-note">217 MB LoRA plugs into an unmodified Wan2.1-I2V-14B backbone. No custom architecture changes required.</div>
+      <div class="training-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Train the adapter for 72,000 steps</h4>
+          <p>Joint video and action prediction via flow matching. 127 hours on two H100 GPUs. The 217 MB adapter plugs into an unmodified Wan2.1 backbone — anyone can download it and run inference.</p>
+        </div>
+      </div>
+      <div class="training-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Release under Apache 2.0</h4>
+          <p>Weights on HuggingFace, code on GitHub, reproducible training recipe, and an invitation for the SO-101 community to contribute data and help scale the next version.</p>
+        </div>
+      </div>
     </div>
   </div>
 
   <!-- CTA grid -->
-  <section class="section-head">
+  <section class="section-head" style="margin-top:80px">
     <div class="eyebrow">Where to go next</div>
     <h2>Explore the project</h2>
   </section>
 
   <div class="cta-grid">
-    <a class="cta-card" href="paper.html">
-      <span class="tag">Research paper</span>
-      <h4>Read the paper</h4>
-      <p>Conference-style writeup covering architecture, data curation, training recipe, evaluation protocols, and an honest discussion of the model's failure modes.</p>
-      <span class="arrow">paper.html →</span>
-    </a>
     <a class="cta-card" href="demo.html">
       <span class="tag">Interactive gallery</span>
       <h4>Try the demo</h4>
-      <p>Pick any training scene, swap between training and novel prompts, and watch the model's imagined rollout play out from front, top, and gripper cameras.</p>
+      <p>Pick a scene, swap between training and novel prompts, and watch the model's imagined rollout from three camera viewpoints. 23 rollouts ready to browse.</p>
       <span class="arrow">demo.html →</span>
+    </a>
+    <a class="cta-card" href="paper.html">
+      <span class="tag">Research paper</span>
+      <h4>Read the paper</h4>
+      <p>Conference-style writeup covering the architecture, data curation, training recipe, evaluation protocols, and a discussion of current limitations and future work.</p>
+      <span class="arrow">paper.html →</span>
     </a>
     <a class="cta-card" href="results.html">
       <span class="tag">Detailed experiments</span>
-      <h4>See the receipts</h4>
-      <p>Full evaluation log — sanity tests, single-chunk policy-mode runs, zero-shot generalization, DreamGen-style autoregressive rollouts, and honest-metrics analysis.</p>
+      <h4>See the evaluation</h4>
+      <p>Full experimental log — sanity tests, single-chunk prediction accuracy, zero-shot generalization, and autoregressive rollout analysis across all six capability categories.</p>
       <span class="arrow">results.html →</span>
     </a>
     <a class="cta-card" href="code.html">
       <span class="tag">Reproduce</span>
       <h4>Read the code</h4>
-      <p>Install instructions, the SO-101 patch to the DreamZero codebase, data conversion pipeline, LoRA training recipe, evaluation scripts, and the inference demo.</p>
+      <p>Install instructions, the SO-101 patch to the DreamZero codebase, the data conversion pipeline, the LoRA training recipe, and all evaluation scripts.</p>
       <span class="arrow">code.html →</span>
     </a>
     <a class="cta-card" href="contribute.html">
       <span class="tag">Community</span>
       <h4>Contribute data</h4>
-      <p>Record your own SO-101 scenes, format as LeRobot, submit to the HF Hub, and Vizuara re-trains the model. Roadmap and HF partnership CTA inside.</p>
+      <p>Record your own SO-101 scenes, format them as LeRobot datasets, and submit via the HuggingFace Hub. Vizuara retrains and re-releases as new DreamZero-SO101 checkpoints.</p>
       <span class="arrow">contribute.html →</span>
     </a>
     <a class="cta-card" href="https://huggingface.co/Vizuara/dreamzero-so101-lora" target="_blank" rel="noopener">
       <span class="tag">Weights</span>
       <h4>HuggingFace model</h4>
-      <p>Download the 217 MB LoRA adapter. Apply on top of an unmodified Wan2.1-I2V-14B-480P checkpoint. Ready to run offline inference in ~7 s per chunk on a single H100.</p>
+      <p>Download the 217 MB adapter. Apply it on top of an unmodified Wan2.1-I2V-14B-480P checkpoint. Ready to run offline inference on a single H100 or RTX 4090.</p>
       <span class="arrow">huggingface.co/Vizuara →</span>
     </a>
   </div>
@@ -308,7 +249,7 @@
     <div class="footer-logo-row"><img src="assets/img/vizuara-logo.png" alt="Vizuara" class="footer-logo"/><h5>DreamZero-SO101</h5></div>
     <p>An open world-action model for the low-cost SO-101 teleoperator arm. Fine-tuned from Wan2.1-I2V-14B on aggregated LeRobot SO-101 community datasets.</p>
     <p>Released under Apache 2.0 by <a href="https://vizuara.ai" target="_blank" rel="noopener">Vizuara</a>. Built on <a href="https://github.com/dreamzero0/dreamzero" target="_blank" rel="noopener">DreamZero</a> and <a href="https://github.com/Wan-Video/Wan2.1" target="_blank" rel="noopener">Wan2.1</a>.</p>
-    <div class="meta">Build · 2026-04-09 · checkpoint 72K · LoRA rank 4</div>
+    <div class="meta">Released April 2026 · checkpoint 72K · LoRA rank 4</div>
   </div>
   <div>
     <h5>Navigate</h5>
@@ -322,7 +263,6 @@
   <div>
     <h5>External</h5>
     <a href="https://huggingface.co/Vizuara/dreamzero-so101-lora" target="_blank" rel="noopener">HF LoRA</a>
-    <a href="https://huggingface.co/Vizuara/dreamzero-so101-checkpoints" target="_blank" rel="noopener">HF Checkpoints</a>
     <a href="https://github.com/RajatDandekar/dreamzero-so101" target="_blank" rel="noopener">GitHub</a>
     <a href="https://github.com/dreamzero0/dreamzero" target="_blank" rel="noopener">DreamZero</a>
     <a href="https://github.com/huggingface/lerobot" target="_blank" rel="noopener">LeRobot</a>

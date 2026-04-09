@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>DreamZero-SO101 — Results & Experimental Receipts</title>
-<meta name="description" content="Full experimental evaluation log for DreamZero-SO101: sanity tests, single-chunk policy mode, zero-shot generalization, autoregressive DreamGen rollouts, and honest drift metrics." />
+<title>DreamZero-SO101 — Experimental Results</title>
+<meta name="description" content="Full experimental evaluation log for DreamZero-SO101: sanity tests, single-chunk policy mode, zero-shot generalization, autoregressive rollouts, and drift analysis." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -73,7 +73,7 @@
   .tr-card .tr-metrics .m { background: var(--panel2); border:1px solid var(--line); border-radius:6px; padding:6px 10px; font-family: var(--font-mono); font-size:10.5px; color: var(--ink-dim); }
   .tr-card .tr-metrics .m strong { color: var(--ink); }
 
-  /* Honest metrics plot grid */
+  /* Drift metrics plot grid */
   .plot-strip { background: var(--panel); border:1px solid var(--line); border-radius:12px; padding:22px; margin-top:28px; }
   .plot-strip img { width:100%; display:block; border-radius:6px; }
   .plot-strip .cap { font-family:var(--font-mono); font-size:11px; color: var(--ink-dim); margin-top:10px; line-height:1.5; }
@@ -116,13 +116,12 @@
   <!-- Hero -->
   <section class="hero">
     <span class="kicker">Experimental Report · Checkpoint 72K · LoRA rank 4</span>
-    <h1 style="margin-top:18px">World Action Model<br/><span class="accent">evaluation receipts.</span></h1>
+    <h1 style="margin-top:18px">Experimental<br/><span class="accent">evaluation report.</span></h1>
     <p class="lead">
-      The full experimental log for DreamZero-SO101 — the artifacts, numbers, and honest failure modes
-      behind the one-page narrative on the Home and Paper pages. Every video below is a real model output
-      from a 14B Wan2.1-I2V-14B backbone with a 108M LoRA adapter, evaluated on the
-      <code>whosricky/so101-megamix-v1</code> training set and the zero-shot
-      <code>RajatDandekar/so101_box_to_bowl_v2</code> test episode.
+      The complete experimental log for DreamZero-SO101 — every artifact and measurement behind the
+      summary on the Home and Paper pages. Every video below is a real model output from a 14B Wan2.1-I2V
+      backbone with a 108M LoRA adapter, evaluated on the <code>whosricky/so101-megamix-v1</code> training
+      set and the unseen <code>RajatDandekar/so101_box_to_bowl_v2</code> test episode.
     </p>
 
     <div class="score-bar">
@@ -455,7 +454,7 @@
 
     <div class="plot-strip">
       <img src="train_rollout/summary_drift.png" alt="DreamGen drift summary">
-      <div class="cap">Raw per-chunk action drift (time-aligned, in degrees) across all six rollouts. The apparent blow-up past chunk 40 is largely an artefact of comparing imagined actions with already-ended ground-truth episodes — see the honest-metrics section below.</div>
+      <div class="cap">Raw per-chunk action drift (time-aligned, in degrees) across all six rollouts. The apparent blow-up past chunk 40 is largely an artefact of comparing imagined actions with already-ended ground-truth episodes — see the drift analysis section below.</div>
     </div>
 
     <div class="tr-grid">
@@ -522,10 +521,10 @@
     </div>
   </section>
 
-  <!-- Honest metrics -->
+  <!-- Drift analysis -->
   <section class="res-section">
     <div class="section-head">
-      <div class="eyebrow">06 · Honest metrics analysis</div>
+      <div class="eyebrow">06 · Drift analysis</div>
       <h2>Three ways to measure drift — and why it matters</h2>
     </div>
     <p class="lead" style="max-width:860px">
@@ -537,8 +536,8 @@
     </p>
 
     <div class="plot-strip">
-      <img src="train_rollout/honest_summary.png" alt="Honest drift summary">
-      <div class="cap">Honest drift metrics for all 6 rollouts. Bars: mean best-match drift. Dots: time-aligned drift. The 20–40° gap between the two is the speed-mismatch penalty — the arm is doing the right thing, just not at the right tempo.</div>
+      <img src="train_rollout/honest_summary.png" alt="Drift summary">
+      <div class="cap">Drift metrics for all 6 rollouts. Bars: mean best-match drift. Dots: time-aligned drift. The 20–40° gap between the two is the speed-mismatch penalty — the arm is doing the right thing, just not at the right tempo.</div>
     </div>
 
     <div class="drift-grid">
@@ -551,13 +550,13 @@
     </div>
 
     <div class="takeaways">
-      <h4>Revised takeaways</h4>
+      <h4>Key takeaways</h4>
       <ul>
-        <li><strong>The model does execute the task in imagination.</strong> All six rollouts visually complete the intended pick / place / stack inside the imagined video stream.</li>
+        <li><strong>The model executes the task in imagination.</strong> All six rollouts visually complete the intended pick, place, or stack inside the imagined video stream.</li>
         <li><strong>Single-chunk policy mode is solid.</strong> 0.57° on the training distribution, 1.6–2.3° on held-out training episodes, and a mean 11.9° on a completely unseen zero-shot dataset — well within the usable range for closed-loop control.</li>
-        <li><strong>Autoregressive rollouts carry 70–95° of best-match drift.</strong> Much of that is speed mismatch and post-episode degradation; some of it is real prediction-chaining error. Both are honest failure modes of a 1K-step LoRA checkpoint.</li>
-        <li><strong>Language conditioning decays fast.</strong> "Pick the red cube" vs "Pick the blue cube" on the same initial frame diverge for the first 2 chunks and then collapse onto the same trajectory — the video stream dominates after that.</li>
-        <li><strong>No termination signal.</strong> The model was never trained to emit "task complete", so frames past the real episode end degrade into an increasingly chaotic dream. Fixable with a stop-token head.</li>
+        <li><strong>Autoregressive rollouts carry 70–95° of best-match drift.</strong> Much of that is speed mismatch and post-episode degradation; some of it is genuine prediction-chaining error. Both are expected limitations of a 72K-step LoRA checkpoint.</li>
+        <li><strong>Language conditioning decays with horizon.</strong> "Pick the red cube" vs "Pick the blue cube" on the same initial frame diverge for the first two chunks and then converge onto the same trajectory — the video stream dominates after that.</li>
+        <li><strong>No termination signal.</strong> The model was never trained to emit "task complete", so frames past the real episode end degrade into an increasingly noisy rollout. A stop-token head is the natural next step.</li>
       </ul>
     </div>
   </section>

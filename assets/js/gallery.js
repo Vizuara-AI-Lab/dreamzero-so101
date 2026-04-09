@@ -36,9 +36,9 @@
   ];
 
   const TYPE_LABELS = {
-    dreamgen: { label: 'DreamGen', color: '#C96840' },
-    policy:   { label: 'Policy',   color: '#2E6A99' },
-    zeroshot: { label: 'Zero-shot', color: '#6A4EA8' },
+    dreamgen: { label: 'Imagined rollout',   short: 'Imagined',   color: '#C96840' },
+    policy:   { label: 'Real-robot chunk',   short: 'Policy',     color: '#2E6A99' },
+    zeroshot: { label: 'Unseen dataset',     short: 'Zero-shot',  color: '#6A4EA8' },
   };
 
   const state = {
@@ -56,10 +56,10 @@
     const zeroshot = manifest.filter(m => m.type === 'zeroshot').length;
     statsStripEl.innerHTML = `
       <div class="stat-chip"><span class="stat-num">${manifest.length}</span><span class="stat-lbl">Rollouts</span></div>
-      <div class="stat-chip"><span class="stat-num">${catCount}</span><span class="stat-lbl">Task categories</span></div>
-      <div class="stat-chip"><span class="stat-num" style="color:#C96840">${dreamgen}</span><span class="stat-lbl">DreamGen imagined</span></div>
-      <div class="stat-chip"><span class="stat-num" style="color:#2E6A99">${policy}</span><span class="stat-lbl">Policy single-chunk</span></div>
-      <div class="stat-chip"><span class="stat-num" style="color:#6A4EA8">${zeroshot}</span><span class="stat-lbl">Zero-shot unseen task</span></div>
+      <div class="stat-chip"><span class="stat-num">${catCount}</span><span class="stat-lbl">Capabilities</span></div>
+      <div class="stat-chip"><span class="stat-num" style="color:#C96840">${dreamgen}</span><span class="stat-lbl">Imagined rollouts</span></div>
+      <div class="stat-chip"><span class="stat-num" style="color:#2E6A99">${policy}</span><span class="stat-lbl">Real-robot chunks</span></div>
+      <div class="stat-chip"><span class="stat-num" style="color:#6A4EA8">${zeroshot}</span><span class="stat-lbl">Unseen datasets</span></div>
     `;
   }
 
@@ -118,21 +118,15 @@
         const thumb = document.createElement('div');
         thumb.className = 'gallery-thumb' + (item.tag === state.activeTag ? ' active' : '');
         thumb.dataset.tag = item.tag;
-        const typeInfo = TYPE_LABELS[item.type] || { label: item.type || '', color: '#8A8278' };
+        const typeInfo = TYPE_LABELS[item.type] || { short: '', color: '#8A8278' };
         const typeBadge = item.type
-          ? `<span class="type-badge" style="background:${typeInfo.color}20;color:${typeInfo.color};border:1px solid ${typeInfo.color}40">${typeInfo.label}</span>`
-          : '';
-        const metric = item.best_match_drift_deg !== undefined
-          ? `<span class="metric-badge">${item.best_match_drift_deg.toFixed(0)}° drift</span>`
-          : item.action_rmse_deg !== undefined
-          ? `<span class="metric-badge">${item.action_rmse_deg.toFixed(2)}° RMSE</span>`
+          ? `<span class="type-badge" style="background:${typeInfo.color}18;color:${typeInfo.color};border:1px solid ${typeInfo.color}55">${typeInfo.short}</span>`
           : '';
         thumb.innerHTML = `
           <img src="${item.thumbnail}" alt="${item.tag}" onerror="this.style.opacity=0.3" />
           <div class="txt">
             <div class="ep">${typeBadge} <span class="pk">${item.prompt_kind}</span></div>
             <div class="task">${item.prompt}</div>
-            ${metric}
           </div>
         `;
         thumb.addEventListener('click', () => selectTag(item.tag));
@@ -201,30 +195,26 @@
     const item = manifest.find(x => x.tag === state.activeTag);
     if (!item) return;
     const catMeta = CATEGORIES.find(c => c.id === item.category);
+    // Set the category class on the main panel so the accent border reflects the task.
+    main.dataset.cat = item.category || '';
     titleEl.innerHTML = `<span class="cat-tag cat-${item.category}">${catMeta ? catMeta.label : item.category}</span> ${item.task_summary}`;
     promptEl.textContent = '"' + item.prompt + '"';
     const dur = item.duration_sec ? item.duration_sec.toFixed(1) + 's' : '—';
     const typeInfo = TYPE_LABELS[item.type] || { label: item.type || '—', color: '#8A8278' };
-    let metricHtml = '';
-    if (item.best_match_drift_deg !== undefined) {
-      metricHtml = `<span><span class="tag">best-match drift</span> ${item.best_match_drift_deg.toFixed(0)}°</span>`;
-    } else if (item.action_rmse_deg !== undefined) {
-      metricHtml = `<span><span class="tag">action RMSE</span> ${item.action_rmse_deg.toFixed(2)}°</span>`;
-    }
     metaEl.innerHTML = `
       <span><span class="tag">mode</span> <span style="color:${typeInfo.color};font-weight:600">${typeInfo.label}</span></span>
-      <span><span class="tag">prompt</span> ${item.prompt_kind}</span>
+      <span><span class="tag">instruction</span> ${item.prompt_kind}</span>
       <span><span class="tag">duration</span> ${dur}</span>
-      ${metricHtml}
+      <span><span class="tag">cameras</span> 3 views</span>
     `;
     renderPromptPills(item);
     renderCamTabs(item);
     updatePlayer(item);
     if (noteEl) {
       const notes = {
-        dreamgen: 'Autoregressive DreamGen rollout — 60 chunks of imagined video + actions from a single initial frame, no real observations after frame 0. Trimmed to task completion.',
-        policy:   'Single-chunk policy mode — one real frame in, 9 predicted frames + 24 action commands out. This is the mode suitable for real-robot deployment.',
-        zeroshot: 'Zero-shot on an entirely unseen dataset (so101_box_to_bowl_v2). The model was never trained on this task or scene — this is raw generalization from the SO-101 pretraining mix.',
+        dreamgen: 'Imagined rollout — the model is given only a single initial frame and then hallucinates six seconds of video and joint commands autoregressively, with no further real-world observations.',
+        policy:   'Real-robot chunk — one real camera frame in, nine predicted frames and twenty-four joint-action commands out. This is the mode suitable for deployment on a physical SO-101 arm.',
+        zeroshot: 'Unseen dataset — the model was never trained on this task or scene. The rollout is raw generalization from the aggregated SO-101 pretraining mix.',
       };
       noteEl.textContent = notes[item.type] || '';
     }
