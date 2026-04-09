@@ -26,18 +26,24 @@
   color: var(--ink);
   letter-spacing: -0.01em;
   border: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.topnav-brand .dot {
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent);
-  margin-right: 10px;
-  vertical-align: middle;
-  box-shadow: 0 0 12px rgba(217, 119, 87, 0.6);
+.topnav-brand .brand-logo {
+  height: 34px;
+  width: 34px;
+  border-radius: 6px;
+  display: block;
+}
+.topnav-brand .brand-text {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 17px;
+  color: var(--ink);
 }
 .topnav-brand:hover { border: none; }
+.topnav-brand:hover .brand-text { color: var(--accent); }
 
 .topnav-links {
   display: flex;
@@ -145,6 +151,27 @@ footer.site-footer a {
   border: none;
 }
 footer.site-footer a:hover { color: var(--accent); }
+footer.site-footer .footer-logo-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+footer.site-footer .footer-logo {
+  height: 40px;
+  width: 40px;
+  border-radius: 6px;
+  display: block;
+}
+footer.site-footer .footer-logo-row h5 {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  text-transform: none;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  margin: 0;
+  font-weight: 600;
+}
 footer.site-footer .brand-block p {
   font-size: 13px;
   line-height: 1.55;

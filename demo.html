@@ -16,7 +16,7 @@
 
 <nav class="topnav">
   <div class="topnav-inner">
-    <a href="index.html" class="topnav-brand"><span class="dot"></span>DreamZero-SO101</a>
+    <a href="index.html" class="topnav-brand"><img src="assets/img/vizuara-logo.png" alt="Vizuara" class="brand-logo"/><span class="brand-text">DreamZero-SO101</span></a>
     <div class="topnav-links">
       <a href="index.html">Home</a>
       <a href="paper.html">Paper</a>
@@ -34,82 +34,109 @@
 
 <div class="container">
 
-  <section class="hero" style="padding-bottom:16px">
+  <section class="hero" style="padding-bottom:10px">
     <span class="kicker">Interactive Demo</span>
-    <h1 style="margin-top:18px;font-size:46px">Pick a scene.<br/><span class="accent">Watch it imagine.</span></h1>
-    <p class="lead" style="margin-bottom:10px">
-      The gallery below contains two types of pre-computed rollouts from checkpoint 72K. <strong>DreamGen rollouts</strong> are fully autoregressive: given only an initial frame + language instruction, the model imagines 18 seconds of video and joint motion (60 chunks, no real observations after frame 0). <strong>Policy-mode rollouts</strong> show single-chunk inference — one real frame in, 9 predicted frames + 24 action commands out, reported with joint RMSE. All videos trimmed to the working phase.
+    <h1 style="margin-top:18px;font-size:50px">Six task categories.<br/><span class="accent">Twenty-three rollouts.</span></h1>
+    <p class="lead" style="margin-bottom:10px;max-width:860px">
+      Browse the full behavior spectrum of DreamZero-SO101 — from training-set replays to completely unseen datasets, from single-chunk policy deployment to 18-second autoregressive DreamGen imaginations. Every clip is pre-computed from checkpoint 72K.
     </p>
-    <div style="display:flex;gap:18px;align-items:center;margin-top:18px;flex-wrap:wrap">
-      <a class="cta-card" style="flex:0 0 auto;padding:14px 20px;border-radius:6px" href="mailto:team@vizuara.ai?subject=DreamZero-SO101%20custom%20rollout%20request">
-        <span class="tag">Request</span>
-        <h4 style="font-size:15px">Request a custom rollout</h4>
-        <p style="font-size:12px">Send a scene + prompt. Live inference endpoint coming soon.</p>
-      </a>
-      <a class="cta-card" style="flex:0 0 auto;padding:14px 20px;border-radius:6px" href="https://github.com/RajatDandekar/dreamzero-so101/issues/new?title=rollout+request" target="_blank" rel="noopener">
-        <span class="tag">Open an issue</span>
-        <h4 style="font-size:15px">Suggest a scene via GitHub</h4>
-        <p style="font-size:12px">Point us to an SO-101 episode on HF Hub and we will rollout it.</p>
-      </a>
-    </div>
   </section>
+
+  <!-- Gallery stats strip -->
+  <div class="gallery-stats-strip"></div>
+
+  <!-- Category filter chips -->
+  <div class="cat-filter-wrap">
+    <div class="cat-filter-label">Filter by capability</div>
+    <div class="cat-filter-bar"></div>
+  </div>
 
   <section class="gallery-shell">
     <aside class="gallery-sidebar">
-      <h4>Scenes</h4>
+      <h4>Rollouts</h4>
       <div class="gallery-list"><p class="muted" style="font-size:12px">Loading…</p></div>
     </aside>
 
     <div class="gallery-main">
-      <h3 class="gm-title" style="font-size:22px">Episode —</h3>
+      <h3 class="gm-title" style="font-size:22px;line-height:1.3">Loading —</h3>
       <div class="mprompt">""</div>
       <div class="mmeta"></div>
 
-      <div class="prompt-pills"></div>
       <div class="cam-tabs"></div>
 
       <div class="gallery-player">
         <video autoplay loop muted playsinline></video>
       </div>
 
+      <div class="prompt-pills" style="margin-top:16px"></div>
+
       <div class="gallery-note gm-note"></div>
 
       <div style="margin-top:26px;padding-top:22px;border-top:1px solid var(--line);display:flex;gap:12px;flex-wrap:wrap;color:var(--ink-faint);font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:0.1em">
         <span>↺ autoplay loop</span>
         <span>· three-camera rig</span>
-        <span>· no live inference</span>
+        <span>· pre-computed · not live</span>
         <span>· checkpoint 72K</span>
       </div>
     </div>
   </section>
 
+  <!-- CTAs below gallery -->
+  <div style="display:flex;gap:18px;margin-top:40px;flex-wrap:wrap">
+    <a class="cta-card" style="flex:1;min-width:260px" href="mailto:team@vizuara.ai?subject=DreamZero-SO101%20custom%20rollout%20request">
+      <span class="tag">Request</span>
+      <h4>Request a custom rollout</h4>
+      <p>Send a scene + prompt. Live inference endpoint coming soon.</p>
+    </a>
+    <a class="cta-card" style="flex:1;min-width:260px" href="https://github.com/RajatDandekar/dreamzero-so101/issues/new?title=rollout+request" target="_blank" rel="noopener">
+      <span class="tag">Open an issue</span>
+      <h4>Suggest a scene via GitHub</h4>
+      <p>Point us to an SO-101 episode on HF Hub and we will rollout it.</p>
+    </a>
+  </div>
+
   <section class="section-head" style="margin-top:64px">
     <div class="eyebrow">How to read the gallery</div>
-    <h2>What you are looking at</h2>
+    <h2>Six capabilities on display</h2>
   </section>
 
-  <div class="feature-grid">
+  <div class="feature-grid" style="grid-template-columns:repeat(3,1fr)">
     <div class="feature-card">
-      <div class="num">01 — Single initial frame</div>
-      <h4>No live observations</h4>
-      <p>The only real information the model receives is one frame from the front camera and the robot's starting joint state. Everything else is imagined — the model then chains its own predicted video back as input for the next chunk.</p>
+      <div class="num" style="color:#C96840">01 — Simple pick</div>
+      <h4>Training + held-out</h4>
+      <p>Four rollouts of "Pick the red cube" — from an ep-0 training replay to held-out episodes 50 and 100. Action RMSE under 2.3° across all of them.</p>
     </div>
     <div class="feature-card">
-      <div class="num">02 — Training vs novel</div>
-      <h4>The prompt barely changes the trajectory</h4>
-      <p>Compare "Pick the red cube" with "Pick the blue cube" on the same initial frame — the motion is almost identical. The model's autoregressive video stream tends to dominate the language signal after the first few chunks.</p>
+      <div class="num" style="color:#C96840">02 — Mid-episode phases</div>
+      <h4>Resume from any state</h4>
+      <p>Six rollouts that start mid-trajectory — descend, grasp, and lift phases of episodes 50 and 100. Shows the model does not depend on the canonical starting pose.</p>
     </div>
     <div class="feature-card">
-      <div class="num">03 — Three cameras</div>
-      <h4>Front, top, gripper</h4>
-      <p>The model was trained on the three-camera SO-101 rig from <code>whosricky/so101-megamix-v1</code>. All three views are imagined simultaneously from the shared latent and decoded through the Wan VAE in a 2×2 mosaic.</p>
+      <div class="num" style="color:#C96840">03 — Pick &amp; place</div>
+      <h4>Container manipulation</h4>
+      <p>A full DreamGen rollout of picking the red cube and placing it in the bowl. 12 seconds of autoregressive video + action prediction from one initial frame.</p>
+    </div>
+    <div class="feature-card">
+      <div class="num" style="color:#C96840">04 — Stack</div>
+      <h4>Two-object sequencing</h4>
+      <p>Stack the red cube on the blue one. The model has to plan a two-step trajectory — approach red, lift, descend onto blue, release — entirely in imagination.</p>
+    </div>
+    <div class="feature-card">
+      <div class="num" style="color:#C96840">05 — Novel prompts</div>
+      <h4>Language robustness</h4>
+      <p>Same three scenes, flipped prompts ("blue cube" vs "red cube"). Tests whether the model is actually language-conditioned or just replaying training motions.</p>
+    </div>
+    <div class="feature-card">
+      <div class="num" style="color:#6A4EA8">06 — Zero-shot unseen task</div>
+      <h4>Out-of-distribution</h4>
+      <p>Eight single-chunk samples on <code>so101_box_to_bowl_v2</code> — a dataset the model was <strong>never trained on</strong>. Best sample at 1.57° RMSE; raw generalization of the SO-101 pretraining mix.</p>
     </div>
   </div>
 </div>
 
 <footer class="site-footer">
   <div class="brand-block">
-    <h5>DreamZero-SO101</h5>
+    <div class="footer-logo-row"><img src="assets/img/vizuara-logo.png" alt="Vizuara" class="footer-logo"/><h5>DreamZero-SO101</h5></div>
     <p>An open world-action model for the low-cost SO-101 teleoperator arm. Fine-tuned from Wan2.1-I2V-14B on aggregated LeRobot SO-101 community datasets.</p>
     <p>Released under Apache 2.0 by <a href="https://vizuara.ai" target="_blank" rel="noopener">Vizuara</a>.</p>
     <div class="meta">Build · 2026-04-09 · checkpoint 72K · LoRA rank 4</div>

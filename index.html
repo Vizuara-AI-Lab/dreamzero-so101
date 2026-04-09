@@ -16,7 +16,7 @@
 
 <nav class="topnav">
   <div class="topnav-inner">
-    <a href="index.html" class="topnav-brand"><span class="dot"></span>DreamZero-SO101</a>
+    <a href="index.html" class="topnav-brand"><img src="assets/img/vizuara-logo.png" alt="Vizuara" class="brand-logo"/><span class="brand-text">DreamZero-SO101</span></a>
     <div class="topnav-links">
       <a href="index.html">Home</a>
       <a href="paper.html">Paper</a>
@@ -71,26 +71,26 @@
     <div class="hero-clip">
       <video src="gallery/ep000_train/rollout_front.mp4" autoplay loop muted playsinline></video>
       <div class="meta">
-        <div class="ep">Episode 0 · training prompt · 10.9 s</div>
+        <div class="ep">Simple pick · DreamGen · 7.0 s</div>
         <div class="prompt">"Pick the red cube"</div>
       </div>
     </div>
     <div class="hero-clip">
       <video src="gallery/ep245_train/rollout_front.mp4" autoplay loop muted playsinline></video>
       <div class="meta">
-        <div class="ep">Episode 245 · training prompt · 17.9 s</div>
+        <div class="ep">Pick &amp; place · DreamGen · 12.0 s</div>
         <div class="prompt">"Pick the red cube and place it in the bowl"</div>
       </div>
     </div>
     <div class="hero-clip">
       <video src="gallery/ep206_train/rollout_front.mp4" autoplay loop muted playsinline></video>
       <div class="meta">
-        <div class="ep">Episode 206 · training prompt · 18.0 s</div>
+        <div class="ep">Stack · DreamGen · 12.0 s</div>
         <div class="prompt">"Put the red cube on top of the blue cube"</div>
       </div>
     </div>
   </section>
-  <p class="muted" style="font-size:12.5px;margin-top:6px;font-family:var(--font-mono)">All three clips are imagined from a single initial frame + the training language prompt. Clips are trimmed to the real episode end-time; see <a href="results.html">Results</a> for the raw 18 s rollouts with post-task degradation.</p>
+  <p class="muted" style="font-size:12.5px;margin-top:6px;font-family:var(--font-mono)">Three DreamGen rollouts from 23 in the <a href="demo.html">interactive demo</a>. Each is imagined from a single initial frame + language prompt — no real observations after frame 0. Clips trimmed to task completion; the <a href="results.html">Results page</a> has the raw 18 s rollouts with post-task degradation.</p>
 
   <!-- Three-column explainer -->
   <section class="section-head" style="margin-top:72px">
@@ -305,7 +305,7 @@
 
 <footer class="site-footer">
   <div class="brand-block">
-    <h5>DreamZero-SO101</h5>
+    <div class="footer-logo-row"><img src="assets/img/vizuara-logo.png" alt="Vizuara" class="footer-logo"/><h5>DreamZero-SO101</h5></div>
     <p>An open world-action model for the low-cost SO-101 teleoperator arm. Fine-tuned from Wan2.1-I2V-14B on aggregated LeRobot SO-101 community datasets.</p>
     <p>Released under Apache 2.0 by <a href="https://vizuara.ai" target="_blank" rel="noopener">Vizuara</a>. Built on <a href="https://github.com/dreamzero0/dreamzero" target="_blank" rel="noopener">DreamZero</a> and <a href="https://github.com/Wan-Video/Wan2.1" target="_blank" rel="noopener">Wan2.1</a>.</p>
     <div class="meta">Build · 2026-04-09 · checkpoint 72K · LoRA rank 4</div>
