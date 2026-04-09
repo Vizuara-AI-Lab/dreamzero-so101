@@ -1,0 +1,110 @@
+/* DreamZero-SO101 — shared design tokens */
+:root {
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-serif: 'Inter', 'Iowan Old Style', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+
+  /* Light academic palette */
+  --bg: #FFFFFF;
+  --panel: #F7F5F2;
+  --panel2: #EEECEA;
+  --panel3: #E4E1DC;
+  --line: #DDD9D3;
+  --line-hi: #C8C3BB;
+
+  /* Ink scale */
+  --ink: #1A1915;
+  --ink-dim: #4A4540;
+  --ink-faint: #8A8278;
+
+  /* Accents (Vizuara brand preserved) */
+  --accent: #C96840;   /* orange — slightly richer on white */
+  --warm: #A07040;     /* tan */
+  --teal: #3D8A54;     /* pass / ground truth — darker for white bg */
+  --blue: #2E6A99;
+  --purple: #6A4EA8;
+  --gold: #B8920A;
+  --pass: #3D8A54;
+  --fail: #C96840;
+  --soft: #A07040;
+
+  /* Layout */
+  --container: 1280px;
+  --container-narrow: 780px;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --radius-lg: 14px;
+
+  /* Spacing scale */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+  --s8: 64px;
+
+  /* Build metadata */
+  --build-date: "2026-04-09";
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+a { color: var(--accent); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .15s; }
+a:hover { border-bottom-color: var(--accent); }
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0;
+  color: var(--ink);
+}
+h1 { font-size: 54px; line-height: 1.05; }
+h2 { font-size: 32px; line-height: 1.15; margin: 0 0 18px; }
+h3 { font-size: 22px; line-height: 1.2; }
+h4 { font-size: 17px; }
+
+p { margin: 0 0 14px; color: var(--ink-dim); }
+p strong { color: var(--ink); font-weight: 600; }
+
+code, .mono {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.kicker {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 5px 11px;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+}
+
+.muted { color: var(--ink-dim); }
+.faint { color: var(--ink-faint); }
+
+hr.divider {
+  height: 1px;
+  background: var(--line);
+  border: none;
+  margin: 56px 0;
+}

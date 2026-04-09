@@ -1,0 +1,32 @@
+{
+  "tag": "ep206_train",
+  "episode": 206,
+  "training_task": "Put the red cube on top of the blue cube",
+  "prompt": "Put the red cube on top of the blue cube",
+  "prompt_kind": "training",
+  "episode_length": 573,
+  "n_steps": 60,
+  "frames_per_step": 9,
+  "total_imagined_frames": 540,
+  "mean_chunk_time_s": 7.596321868896484,
+  "total_rollout_time_s": 455.77931213378906,
+  "initial_state": [
+    -0.47258979082107544,
+    -98.71958923339844,
+    98.54743194580078,
+    65.2136001586914,
+    2.3199024200439453,
+    1.5775034427642822
+  ],
+  "final_imagined_state": [
+    -26.864380180835724,
+    -83.450439453125,
+    -95.95966720581055,
+    66.20301246643066,
+    4.750812530517578,
+    -28.33466124534607
+  ],
+  "mean_drift_deg": 90.10852435089308,
+  "final_drift_deg": 192.55696172099954,
+  "n_completed_steps": 60
+}

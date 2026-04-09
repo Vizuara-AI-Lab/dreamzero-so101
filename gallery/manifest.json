@@ -1,0 +1,248 @@
+[
+  {
+    "tag": "ep000_train",
+    "episode": 0,
+    "task_summary": "simple pick (red cube)",
+    "prompt": "Pick the red cube",
+    "prompt_kind": "training",
+    "type": "dreamgen",
+    "duration_sec": 7.0,
+    "thumbnail": "gallery/ep000_train/thumbnail.jpg",
+    "videos": {
+      "front":   "gallery/ep000_train/rollout_front.mp4",
+      "top":     "gallery/ep000_train/rollout_top.mp4",
+      "gripper": "gallery/ep000_train/rollout_gripper.mp4"
+    },
+    "best_match_drift_deg": 94,
+    "time_aligned_drift_deg": 97
+  },
+  {
+    "tag": "ep000_novel",
+    "episode": 0,
+    "task_summary": "simple pick (red cube)",
+    "prompt": "Pick the blue cube",
+    "prompt_kind": "novel",
+    "type": "dreamgen",
+    "duration_sec": 7.0,
+    "thumbnail": "gallery/ep000_novel/thumbnail.jpg",
+    "videos": {
+      "front":   "gallery/ep000_novel/rollout_front.mp4",
+      "top":     "gallery/ep000_novel/rollout_top.mp4",
+      "gripper": "gallery/ep000_novel/rollout_gripper.mp4"
+    },
+    "best_match_drift_deg": 90,
+    "time_aligned_drift_deg": 97
+  },
+  {
+    "tag": "ep000_policy",
+    "episode": 0,
+    "task_summary": "simple pick (red cube)",
+    "prompt": "Pick the red cube",
+    "prompt_kind": "training",
+    "type": "policy",
+    "duration_sec": 3.0,
+    "thumbnail": "demo/train_ep0/input_front.jpg",
+    "videos": {
+      "front":   "demo/train_ep0/pred_front_slow.mp4",
+      "top":     "demo/train_ep0/pred_top_slow.mp4",
+      "gripper": "demo/train_ep0/pred_gripper_slow.mp4"
+    },
+    "action_rmse_deg": 0.57
+  },
+  {
+    "tag": "ep050_policy",
+    "episode": 50,
+    "task_summary": "simple pick — held-out episode",
+    "prompt": "Pick the red cube",
+    "prompt_kind": "held-out",
+    "type": "policy",
+    "duration_sec": 3.0,
+    "thumbnail": "demo/heldout_ep50/input_front.jpg",
+    "videos": {
+      "front":   "demo/heldout_ep50/pred_front_slow.mp4",
+      "top":     "demo/heldout_ep50/pred_top_slow.mp4",
+      "gripper": "demo/heldout_ep50/pred_gripper_slow.mp4"
+    },
+    "action_rmse_deg": 2.29
+  },
+  {
+    "tag": "ep050_f80",
+    "episode": 50,
+    "task_summary": "simple pick — held-out episode",
+    "prompt": "Pick the red cube",
+    "prompt_kind": "mid-episode · descend",
+    "type": "policy",
+    "duration_sec": 3.0,
+    "thumbnail": "demo_mid/ep50_f80_descend/input_front.jpg",
+    "videos": {
+      "front":   "demo_mid/ep50_f80_descend/pred_front_slow.mp4",
+      "top":     "demo_mid/ep50_f80_descend/pred_top_slow.mp4",
+      "gripper": "demo_mid/ep50_f80_descend/pred_gripper_slow.mp4"
+    },
+    "action_rmse_deg": 11.97
+  },
+  {
+    "tag": "ep050_f150",
+    "episode": 50,
+    "task_summary": "simple pick — held-out episode",
+    "prompt": "Pick the red cube",
+    "prompt_kind": "mid-episode · grasp",
+    "type": "policy",
+    "duration_sec": 3.0,
+    "thumbnail": "demo_mid/ep50_f150_grasp/input_front.jpg",
+    "videos": {
+      "front":   "demo_mid/ep50_f150_grasp/pred_front_slow.mp4",
+      "top":     "demo_mid/ep50_f150_grasp/pred_top_slow.mp4",
+      "gripper": "demo_mid/ep50_f150_grasp/pred_gripper_slow.mp4"
+    },
+    "action_rmse_deg": 8.4
+  },
+  {
+    "tag": "ep050_f220",
+    "episode": 50,
+    "task_summary": "simple pick — held-out episode",
+    "prompt": "Pick the red cube",
+    "prompt_kind": "mid-episode · lift",
+    "type": "policy",
+    "duration_sec": 3.0,
+    "thumbnail": "demo_mid/ep50_f220_lift/input_front.jpg",
+    "videos": {
+      "front":   "demo_mid/ep50_f220_lift/pred_front_slow.mp4",
+      "top":     "demo_mid/ep50_f220_lift/pred_top_slow.mp4",
+      "gripper": "demo_mid/ep50_f220_lift/pred_gripper_slow.mp4"
+    },
+    "action_rmse_deg": 6.1
+  },
+  {
+    "tag": "ep100_policy",
+    "episode": 100,
+    "task_summary": "simple pick — held-out episode",
+    "prompt": "Pick the red cube",
+    "prompt_kind": "held-out",
+    "type": "policy",
+    "duration_sec": 3.0,
+    "thumbnail": "demo/heldout_ep100/input_front.jpg",
+    "videos": {
+      "front":   "demo/heldout_ep100/pred_front_slow.mp4",
+      "top":     "demo/heldout_ep100/pred_top_slow.mp4",
+      "gripper": "demo/heldout_ep100/pred_gripper_slow.mp4"
+    },
+    "action_rmse_deg": 1.6
+  },
+  {
+    "tag": "ep100_f80",
+    "episode": 100,
+    "task_summary": "simple pick — held-out episode",
+    "prompt": "Pick the red cube",
+    "prompt_kind": "mid-episode · descend",
+    "type": "policy",
+    "duration_sec": 3.0,
+    "thumbnail": "demo_mid/ep100_f80_descend/input_front.jpg",
+    "videos": {
+      "front":   "demo_mid/ep100_f80_descend/pred_front_slow.mp4",
+      "top":     "demo_mid/ep100_f80_descend/pred_top_slow.mp4",
+      "gripper": "demo_mid/ep100_f80_descend/pred_gripper_slow.mp4"
+    },
+    "action_rmse_deg": 9.2
+  },
+  {
+    "tag": "ep100_f150",
+    "episode": 100,
+    "task_summary": "simple pick — held-out episode",
+    "prompt": "Pick the red cube",
+    "prompt_kind": "mid-episode · grasp",
+    "type": "policy",
+    "duration_sec": 3.0,
+    "thumbnail": "demo_mid/ep100_f150_grasp/input_front.jpg",
+    "videos": {
+      "front":   "demo_mid/ep100_f150_grasp/pred_front_slow.mp4",
+      "top":     "demo_mid/ep100_f150_grasp/pred_top_slow.mp4",
+      "gripper": "demo_mid/ep100_f150_grasp/pred_gripper_slow.mp4"
+    },
+    "action_rmse_deg": 8.4
+  },
+  {
+    "tag": "ep100_f220",
+    "episode": 100,
+    "task_summary": "simple pick — held-out episode",
+    "prompt": "Pick the red cube",
+    "prompt_kind": "mid-episode · lift",
+    "type": "policy",
+    "duration_sec": 3.0,
+    "thumbnail": "demo_mid/ep100_f220_lift/input_front.jpg",
+    "videos": {
+      "front":   "demo_mid/ep100_f220_lift/pred_front_slow.mp4",
+      "top":     "demo_mid/ep100_f220_lift/pred_top_slow.mp4",
+      "gripper": "demo_mid/ep100_f220_lift/pred_gripper_slow.mp4"
+    },
+    "action_rmse_deg": 5.3
+  },
+  {
+    "tag": "ep245_train",
+    "episode": 245,
+    "task_summary": "pick and place (red cube → bowl)",
+    "prompt": "Pick the red cube and place it in the bowl",
+    "prompt_kind": "training",
+    "type": "dreamgen",
+    "duration_sec": 12.0,
+    "thumbnail": "gallery/ep245_train/thumbnail.jpg",
+    "videos": {
+      "front":   "gallery/ep245_train/rollout_front.mp4",
+      "top":     "gallery/ep245_train/rollout_top.mp4",
+      "gripper": "gallery/ep245_train/rollout_gripper.mp4"
+    },
+    "best_match_drift_deg": 74,
+    "time_aligned_drift_deg": 109
+  },
+  {
+    "tag": "ep245_novel",
+    "episode": 245,
+    "task_summary": "pick and place (red cube → bowl)",
+    "prompt": "Pick the yellow cube and place it in the bowl",
+    "prompt_kind": "novel",
+    "type": "dreamgen",
+    "duration_sec": 12.0,
+    "thumbnail": "gallery/ep245_novel/thumbnail.jpg",
+    "videos": {
+      "front":   "gallery/ep245_novel/rollout_front.mp4",
+      "top":     "gallery/ep245_novel/rollout_top.mp4",
+      "gripper": "gallery/ep245_novel/rollout_gripper.mp4"
+    },
+    "best_match_drift_deg": 85,
+    "time_aligned_drift_deg": 111
+  },
+  {
+    "tag": "ep206_train",
+    "episode": 206,
+    "task_summary": "stack red on blue cube",
+    "prompt": "Put the red cube on top of the blue cube",
+    "prompt_kind": "training",
+    "type": "dreamgen",
+    "duration_sec": 12.0,
+    "thumbnail": "gallery/ep206_train/thumbnail.jpg",
+    "videos": {
+      "front":   "gallery/ep206_train/rollout_front.mp4",
+      "top":     "gallery/ep206_train/rollout_top.mp4",
+      "gripper": "gallery/ep206_train/rollout_gripper.mp4"
+    },
+    "best_match_drift_deg": 71,
+    "time_aligned_drift_deg": 90
+  },
+  {
+    "tag": "ep206_novel",
+    "episode": 206,
+    "task_summary": "stack red on blue cube",
+    "prompt": "Put the blue cube on top of the red cube",
+    "prompt_kind": "novel",
+    "type": "dreamgen",
+    "duration_sec": 12.0,
+    "thumbnail": "gallery/ep206_novel/thumbnail.jpg",
+    "videos": {
+      "front":   "gallery/ep206_novel/rollout_front.mp4",
+      "top":     "gallery/ep206_novel/rollout_top.mp4",
+      "gripper": "gallery/ep206_novel/rollout_gripper.mp4"
+    },
+    "best_match_drift_deg": 83,
+    "time_aligned_drift_deg": 102
+  }
+]

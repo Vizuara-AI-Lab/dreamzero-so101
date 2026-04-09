@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DreamZero-SO101 — Interactive Rollout Gallery</title>
+<meta name="description" content="Pick a training scene, swap between training and novel prompts, and watch DreamZero-SO101 imagine a rollout from three camera viewpoints." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/layout.css">
+<link rel="stylesheet" href="assets/css/components.css">
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="index.html" class="topnav-brand"><span class="dot"></span>DreamZero-SO101</a>
+    <div class="topnav-links">
+      <a href="index.html">Home</a>
+      <a href="paper.html">Paper</a>
+      <a href="demo.html">Demo</a>
+      <a href="results.html">Results</a>
+      <a href="code.html">Code</a>
+      <a href="contribute.html">Contribute</a>
+    </div>
+    <div class="topnav-ext">
+      <a href="https://huggingface.co/Vizuara/dreamzero-so101-lora" target="_blank" rel="noopener">HF Model</a>
+      <a href="https://github.com/vizuara/dreamzero-so101" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <section class="hero" style="padding-bottom:16px">
+    <span class="kicker">Interactive Demo</span>
+    <h1 style="margin-top:18px;font-size:46px">Pick a scene.<br/><span class="accent">Watch it imagine.</span></h1>
+    <p class="lead" style="margin-bottom:10px">
+      Every clip below is a pre-computed autoregressive rollout from checkpoint 72K. Given only the <em>initial</em> frame + a language instruction, the model imagines the next 18 seconds of video and joint motion — 60 chunks of 9 frames each — without ever seeing a real observation after frame&nbsp;0. Trimmed to the real episode end so you see only the working phase.
+    </p>
+    <div style="display:flex;gap:18px;align-items:center;margin-top:18px;flex-wrap:wrap">
+      <a class="cta-card" style="flex:0 0 auto;padding:14px 20px;border-radius:6px" href="mailto:team@vizuara.ai?subject=DreamZero-SO101%20custom%20rollout%20request">
+        <span class="tag">Request</span>
+        <h4 style="font-size:15px">Request a custom rollout</h4>
+        <p style="font-size:12px">Send a scene + prompt. Live inference endpoint coming soon.</p>
+      </a>
+      <a class="cta-card" style="flex:0 0 auto;padding:14px 20px;border-radius:6px" href="https://github.com/vizuara/dreamzero-so101/issues/new?title=rollout+request" target="_blank" rel="noopener">
+        <span class="tag">Open an issue</span>
+        <h4 style="font-size:15px">Suggest a scene via GitHub</h4>
+        <p style="font-size:12px">Point us to an SO-101 episode on HF Hub and we will rollout it.</p>
+      </a>
+    </div>
+  </section>
+
+  <section class="gallery-shell">
+    <aside class="gallery-sidebar">
+      <h4>Scenes</h4>
+      <div class="gallery-list"><p class="muted" style="font-size:12px">Loading…</p></div>
+    </aside>
+
+    <div class="gallery-main">
+      <h3 class="gm-title" style="font-size:22px">Episode —</h3>
+      <div class="mprompt">""</div>
+      <div class="mmeta"></div>
+
+      <div class="prompt-pills"></div>
+      <div class="cam-tabs"></div>
+
+      <div class="gallery-player">
+        <video autoplay loop muted playsinline></video>
+      </div>
+
+      <div class="gallery-note gm-note"></div>
+
+      <div style="margin-top:26px;padding-top:22px;border-top:1px solid var(--line);display:flex;gap:12px;flex-wrap:wrap;color:var(--ink-faint);font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:0.1em">
+        <span>↺ autoplay loop</span>
+        <span>· three-camera rig</span>
+        <span>· no live inference</span>
+        <span>· checkpoint 72K</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-head" style="margin-top:64px">
+    <div class="eyebrow">How to read the gallery</div>
+    <h2>What you are looking at</h2>
+  </section>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="num">01 — Single initial frame</div>
+      <h4>No live observations</h4>
+      <p>The only real information the model receives is one frame from the front camera and the robot's starting joint state. Everything else is imagined — the model then chains its own predicted video back as input for the next chunk.</p>
+    </div>
+    <div class="feature-card">
+      <div class="num">02 — Training vs novel</div>
+      <h4>The prompt barely changes the trajectory</h4>
+      <p>Compare "Pick the red cube" with "Pick the blue cube" on the same initial frame — the motion is almost identical. The model's autoregressive video stream tends to dominate the language signal after the first few chunks.</p>
+    </div>
+    <div class="feature-card">
+      <div class="num">03 — Three cameras</div>
+      <h4>Front, top, gripper</h4>
+      <p>The model was trained on the three-camera SO-101 rig from <code>whosricky/so101-megamix-v1</code>. All three views are imagined simultaneously from the shared latent and decoded through the Wan VAE in a 2×2 mosaic.</p>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="brand-block">
+    <h5>DreamZero-SO101</h5>
+    <p>An open world-action model for the low-cost SO-101 teleoperator arm. Fine-tuned from Wan2.1-I2V-14B on aggregated LeRobot SO-101 community datasets.</p>
+    <p>Released under Apache 2.0 by <a href="https://vizuara.ai" target="_blank" rel="noopener">Vizuara</a>.</p>
+    <div class="meta">Build · 2026-04-09 · checkpoint 72K · LoRA rank 4</div>
+  </div>
+  <div>
+    <h5>Navigate</h5>
+    <a href="index.html">Home</a>
+    <a href="paper.html">Paper</a>
+    <a href="demo.html">Demo</a>
+    <a href="results.html">Results</a>
+    <a href="code.html">Code</a>
+    <a href="contribute.html">Contribute</a>
+  </div>
+  <div>
+    <h5>External</h5>
+    <a href="https://huggingface.co/Vizuara/dreamzero-so101-lora" target="_blank" rel="noopener">HF LoRA</a>
+    <a href="https://github.com/vizuara/dreamzero-so101" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/dreamzero0/dreamzero" target="_blank" rel="noopener">DreamZero</a>
+  </div>
+</footer>
+
+<script src="assets/js/nav.js"></script>
+<script src="assets/js/gallery.js"></script>
+</body>
+</html>

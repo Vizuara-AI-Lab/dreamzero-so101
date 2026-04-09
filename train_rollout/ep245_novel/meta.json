@@ -1,0 +1,32 @@
+{
+  "tag": "ep245_novel",
+  "episode": 245,
+  "training_task": "Pick the red cube and place it in the bowl",
+  "prompt": "Pick the yellow cube and place it in the bowl",
+  "prompt_kind": "novel",
+  "episode_length": 537,
+  "n_steps": 60,
+  "frames_per_step": 9,
+  "total_imagined_frames": 540,
+  "mean_chunk_time_s": 7.620825378100077,
+  "total_rollout_time_s": 457.24952268600464,
+  "initial_state": [
+    -2.5519847869873047,
+    -99.23175048828125,
+    93.46345520019531,
+    74.89102172851562,
+    -0.8058608174324036,
+    1.8518518209457397
+  ],
+  "final_imagined_state": [
+    22.952287673950195,
+    -186.20549392700195,
+    -75.85923385620117,
+    132.0441198348999,
+    -1.6487725377082825,
+    -37.4354864358902
+  ],
+  "mean_drift_deg": 112.67634576335544,
+  "final_drift_deg": 206.5169548879124,
+  "n_completed_steps": 60
+}

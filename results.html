@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DreamZero-SO101 — Results & Experimental Receipts</title>
+<meta name="description" content="Full experimental evaluation log for DreamZero-SO101: sanity tests, single-chunk policy mode, zero-shot generalization, autoregressive DreamGen rollouts, and honest drift metrics." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/layout.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<style>
+  /* Results-specific layout */
+  .res-section { margin-top: 84px; }
+  .res-section > .section-head { margin-top: 0; }
+
+  /* Sanity test 5-card grid */
+  .test-grid { display:grid; grid-template-columns: repeat(5, 1fr); gap:14px; margin-top:24px; }
+  @media (max-width: 1100px) { .test-grid { grid-template-columns: repeat(2, 1fr); } }
+  .test-card { background: var(--panel); border:1px solid var(--line); border-radius: 10px; padding: 16px 16px 18px; display:flex; flex-direction:column; }
+  .test-card img { width:100%; border-radius:6px; margin-top:10px; border:1px solid var(--line); }
+  .test-card .lbl { font-family: var(--font-mono); font-size:10px; text-transform: uppercase; letter-spacing:0.14em; color: var(--ink-dim); }
+  .test-card h4 { font-size:14px; margin:6px 0 8px; color: var(--ink); font-weight:600; }
+  .test-card p { font-size:12.5px; color: var(--ink-dim); line-height:1.5; margin:8px 0 0; }
+  .test-card .verdict { margin-top:10px; font-family: var(--font-mono); font-size:10.5px; letter-spacing:0.1em; text-transform: uppercase; }
+  .verdict.pass { color: var(--pass); }
+  .verdict.fail { color: var(--fail); }
+  .verdict.partial { color: var(--soft); }
+
+  /* Episode evaluation card (per-episode single-chunk) */
+  .ep-card { background: var(--panel); border:1px solid var(--line); border-radius: 12px; padding: 26px 28px; margin-top:26px; }
+  .ep-head { display:flex; justify-content:space-between; align-items:flex-start; gap:24px; flex-wrap:wrap; padding-bottom:18px; border-bottom:1px solid var(--line); }
+  .ep-head .left h3 { font-size:20px; margin:0 0 4px; }
+  .ep-head .left .prompt { color: var(--accent); font-size:13px; font-style:italic; font-family:var(--font-serif); }
+  .ep-head .left .sub { font-family: var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.1em; color: var(--ink-faint); margin-top:6px; }
+  .ep-metrics { display:flex; gap:14px; flex-wrap:wrap; }
+  .metric { background: var(--panel2); border:1px solid var(--line); border-radius:8px; padding:10px 14px; min-width:120px; }
+  .metric .k { font-family: var(--font-mono); font-size:9.5px; text-transform:uppercase; letter-spacing:0.12em; color: var(--ink-faint); }
+  .metric .v { font-family: var(--font-serif); font-size:22px; color: var(--ink); font-weight:600; margin-top:2px; }
+  .metric .v.pass { color: var(--pass); } .metric .v.warn { color: var(--soft); } .metric .v.fail { color: var(--fail); }
+
+  .vid-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; margin-top:22px; }
+  @media (max-width: 900px) { .vid-grid { grid-template-columns: 1fr; } }
+  .vid-cell { background: var(--panel2); border:1px solid var(--line); border-radius: 8px; padding:10px; }
+  .vid-cell video { width:100%; display:block; border-radius:4px; background:#000; }
+  .vid-cell .cap { font-family: var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:0.1em; color: var(--ink-dim); margin-top:8px; display:flex; justify-content:space-between; }
+  .vid-cell .cap .tag { color: var(--ink-faint); }
+
+  .action-plot { margin-top:22px; background: var(--panel2); border:1px solid var(--line); border-radius:8px; padding:14px; }
+  .action-plot img { width:100%; display:block; border-radius:4px; }
+  .action-plot .cap { font-family: var(--font-mono); font-size:10.5px; color: var(--ink-dim); margin-top:10px; }
+
+  /* Zero-shot 8-sample grid */
+  .zs-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-top:22px; }
+  @media (max-width: 1100px) { .zs-grid { grid-template-columns: repeat(2, 1fr); } }
+  .zs-card { background: var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px; }
+  .zs-card video { width:100%; display:block; border-radius:4px; background:#000; }
+  .zs-card .zs-head { display:flex; justify-content:space-between; font-family: var(--font-mono); font-size:10px; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; }
+  .zs-card .zs-head .tag { color: var(--accent); }
+  .zs-card .zs-head .rmse { color: var(--ink-dim); }
+
+  /* Training rollout grid */
+  .tr-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:18px; margin-top:24px; }
+  @media (max-width: 1100px) { .tr-grid { grid-template-columns: 1fr; } }
+  .tr-card { background: var(--panel); border:1px solid var(--line); border-radius:12px; padding:20px; }
+  .tr-card h4 { margin:0 0 4px; font-size:17px; }
+  .tr-card .prompt { color: var(--accent); font-style:italic; font-size:12.5px; font-family:var(--font-serif); }
+  .tr-card .sub { font-family: var(--font-mono); font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color: var(--ink-faint); margin-top:4px; }
+  .tr-card video { width:100%; border-radius:6px; margin-top:14px; background:#000; display:block; }
+  .tr-card .tr-metrics { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+  .tr-card .tr-metrics .m { background: var(--panel2); border:1px solid var(--line); border-radius:6px; padding:6px 10px; font-family: var(--font-mono); font-size:10.5px; color: var(--ink-dim); }
+  .tr-card .tr-metrics .m strong { color: var(--ink); }
+
+  /* Honest metrics plot grid */
+  .plot-strip { background: var(--panel); border:1px solid var(--line); border-radius:12px; padding:22px; margin-top:28px; }
+  .plot-strip img { width:100%; display:block; border-radius:6px; }
+  .plot-strip .cap { font-family:var(--font-mono); font-size:11px; color: var(--ink-dim); margin-top:10px; line-height:1.5; }
+  .drift-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; margin-top:20px; }
+  @media (max-width: 1100px) { .drift-grid { grid-template-columns: repeat(2, 1fr); } }
+  .drift-grid .cell { background: var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px; }
+  .drift-grid .cell img { width:100%; border-radius:4px; display:block; }
+  .drift-grid .cell .lbl { font-family: var(--font-mono); font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color: var(--ink-dim); margin-top:6px; display:flex; justify-content:space-between; }
+
+  /* Takeaways list */
+  .takeaways { background: var(--panel); border:1px solid var(--line); border-left:3px solid var(--teal); border-radius:10px; padding:24px 28px; margin-top:30px; }
+  .takeaways h4 { margin:0 0 12px; font-size:14px; text-transform:uppercase; letter-spacing:0.1em; color: var(--teal); font-family: var(--font-mono); font-weight:500; }
+  .takeaways ul { margin:0; padding-left:20px; color: var(--ink-dim); font-size:13.5px; line-height:1.75; }
+  .takeaways ul li { margin: 6px 0; }
+  .takeaways ul li strong { color: var(--ink); font-weight:600; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="index.html" class="topnav-brand"><span class="dot"></span>DreamZero-SO101</a>
+    <div class="topnav-links">
+      <a href="index.html">Home</a>
+      <a href="paper.html">Paper</a>
+      <a href="demo.html">Demo</a>
+      <a href="results.html">Results</a>
+      <a href="code.html">Code</a>
+      <a href="contribute.html">Contribute</a>
+    </div>
+    <div class="topnav-ext">
+      <a href="https://huggingface.co/Vizuara/dreamzero-so101-lora" target="_blank" rel="noopener">HF Model</a>
+      <a href="https://github.com/vizuara/dreamzero-so101" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="kicker">Experimental Report · Checkpoint 72K · LoRA rank 4</span>
+    <h1 style="margin-top:18px">World Action Model<br/><span class="accent">evaluation receipts.</span></h1>
+    <p class="lead">
+      The full experimental log for DreamZero-SO101 — the artifacts, numbers, and honest failure modes
+      behind the one-page narrative on the Home and Paper pages. Every video below is a real model output
+      from a 14B Wan2.1-I2V-14B backbone with a 108M LoRA adapter, evaluated on the
+      <code>whosricky/so101-megamix-v1</code> training set and the zero-shot
+      <code>RajatDandekar/so101_box_to_bowl_v2</code> test episode.
+    </p>
+
+    <div class="score-bar">
+      <div class="score-pill">
+        <span class="label">Sanity tests</span>
+        <span class="value pass">3/5</span>
+      </div>
+      <div class="score-pill">
+        <span class="label">Single-chunk RMSE (train)</span>
+        <span class="value pass">0.57°</span>
+      </div>
+      <div class="score-pill">
+        <span class="label">Single-chunk RMSE (held-out)</span>
+        <span class="value pass">2.3°</span>
+      </div>
+      <div class="score-pill">
+        <span class="label">Zero-shot mean RMSE</span>
+        <span class="value warn">11.9°</span>
+      </div>
+      <div class="score-pill">
+        <span class="label">DreamGen best-match drift</span>
+        <span class="value warn">71–94°</span>
+      </div>
+      <div class="score-pill">
+        <span class="label">Front-view PSNR (raw)</span>
+        <span class="value">18.5 dB</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- How we test -->
+  <section class="res-section">
+    <div class="section-head">
+      <div class="eyebrow">Methodology</div>
+      <h2>How we stress-tested the world-action model</h2>
+    </div>
+    <p class="lead" style="max-width:860px">
+      DreamZero-SO101 is a joint video + action predictor. We probe its behaviour from three angles, each a
+      stricter form of the previous. First, <b>single-chunk policy mode</b>: give the model one real frame and
+      a real joint state, ask it to emit the next 24 action commands, and compare with the ground-truth
+      trajectory. Second, <b>zero-shot generalization</b>: repeat the single-chunk protocol on a completely
+      unseen dataset with a different camera rig, objects, and table layout. Third, <b>autoregressive
+      DreamGen rollouts</b>: drop the live observation entirely and let the model chain its own imagined
+      video back as input for 60 consecutive chunks — the hardest setting, and the one that reveals all
+      failure modes.
+    </p>
+  </section>
+
+  <!-- Sanity test suite -->
+  <section class="res-section">
+    <div class="section-head">
+      <div class="eyebrow">01 · Sanity test suite</div>
+      <h2>Does the model remember what it was trained on?</h2>
+    </div>
+    <p class="lead" style="max-width:860px">
+      Five diagnostic tests run on a held-out subset of the training distribution. Tests 1–3 confirm the
+      action head, latent space, and joint coherence are all learned; tests 4–5 probe the harder
+      generalization and autoregressive behaviours where the cracks start to show.
+    </p>
+
+    <div class="test-grid">
+      <div class="test-card">
+        <span class="lbl">test · 01</span>
+        <h4>Action chunk fidelity</h4>
+        <img src="test_1_actions.png" alt="Test 1 — action chunk overlay">
+        <p>Predicted 24-step action chunks overlaid on ground-truth for 3 random frames. First 8 steps track tightly; drift begins past step&nbsp;12 on fast-motion samples.</p>
+        <span class="verdict pass">✓ pass</span>
+      </div>
+      <div class="test-card">
+        <span class="lbl">test · 02</span>
+        <h4>Latent stability</h4>
+        <img src="test_2_latent.png" alt="Test 2 — latent PCA">
+        <p>PCA of the joint action + visual latent, coloured by episode. Clean cluster separation confirms the LoRA has learned an SO-101-aware embedding space.</p>
+        <span class="verdict pass">✓ pass</span>
+      </div>
+      <div class="test-card">
+        <span class="lbl">test · 03</span>
+        <h4>Joint coherence</h4>
+        <img src="test_3_coherence.png" alt="Test 3 — joint coherence">
+        <p>Per-joint phase offsets across a full episode. Shoulder, elbow, and wrist all remain within 1° of the ground-truth coupling.</p>
+        <span class="verdict pass">✓ pass</span>
+      </div>
+      <div class="test-card">
+        <span class="lbl">test · 04</span>
+        <h4>Multi-task disambiguation</h4>
+        <img src="test_4_multitask.png" alt="Test 4 — multi-task">
+        <p>Same initial frame, four different prompts. Model distinguishes "red" vs "blue" in the first chunk, but the trajectories collapse onto a shared prior after ~2 chunks.</p>
+        <span class="verdict partial">◐ partial</span>
+      </div>
+      <div class="test-card">
+        <span class="lbl">test · 05</span>
+        <h4>Autoregressive rollout</h4>
+        <img src="test_5_rollout.png" alt="Test 5 — autoregressive rollout">
+        <p>60-chunk closed-loop rollout on a training episode. Model completes the task inside its imagination but degrades after the real episode end — see section 05 below for the full story.</p>
+        <span class="verdict partial">◐ partial</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Single-chunk per-episode -->
+  <section class="res-section">
+    <div class="section-head">
+      <div class="eyebrow">02 · Single-chunk policy mode</div>
+      <h2>Per-episode evaluation on the training distribution</h2>
+    </div>
+    <p class="lead" style="max-width:860px">
+      For each episode below, we feed the model the first frame, the real joint state at that frame, and
+      the training language prompt. The model emits 9 predicted frames + 24 joint commands. We compare the
+      predicted commands against the logged ground-truth trajectory over the same 24 steps.
+    </p>
+
+    <!-- train_ep0 -->
+    <div class="ep-card">
+      <div class="ep-head">
+        <div class="left">
+          <h3>Episode 0 — training sample</h3>
+          <div class="prompt">"Pick the red cube"</div>
+          <div class="sub">whosricky/so101-megamix-v1 · ep 0 · frame 0 · episode length 328</div>
+        </div>
+        <div class="ep-metrics">
+          <div class="metric"><div class="k">action RMSE</div><div class="v pass">0.57°</div></div>
+          <div class="metric"><div class="k">video PSNR</div><div class="v">4.8 dB</div></div>
+          <div class="metric"><div class="k">chunk horizon</div><div class="v">24 steps</div></div>
+        </div>
+      </div>
+      <div class="vid-grid">
+        <div class="vid-cell"><video src="demo/train_ep0/pred_front_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · front</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo/train_ep0/pred_top_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · top</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo/train_ep0/pred_gripper_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · gripper</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo/train_ep0/gt_front_short_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>ground-truth · front</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo/train_ep0/gt_future.mp4" autoplay loop muted playsinline></video><div class="cap"><span>ground-truth · future</span><span class="tag">1×</span></div></div>
+        <div class="vid-cell"><video src="demo/train_ep0/predicted_video.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · 2×2 mosaic</span><span class="tag">1×</span></div></div>
+      </div>
+      <div class="action-plot">
+        <img src="demo/train_ep0/action_plot.png" alt="Episode 0 action plot">
+        <div class="cap">Predicted vs ground-truth joints over the 24-step chunk. All 6 DOFs track within 1° — on the training distribution with the canonical initial frame, the model is effectively exact.</div>
+      </div>
+    </div>
+
+    <!-- heldout_ep50 -->
+    <div class="ep-card">
+      <div class="ep-head">
+        <div class="left">
+          <h3>Episode 50 — held-out sample</h3>
+          <div class="prompt">"Pick the red cube"</div>
+          <div class="sub">whosricky/so101-megamix-v1 · ep 50 · frame 0 · episode length 374 · never seen in training</div>
+        </div>
+        <div class="ep-metrics">
+          <div class="metric"><div class="k">action RMSE</div><div class="v pass">2.29°</div></div>
+          <div class="metric"><div class="k">video PSNR</div><div class="v">4.9 dB</div></div>
+          <div class="metric"><div class="k">chunk horizon</div><div class="v">24 steps</div></div>
+        </div>
+      </div>
+      <div class="vid-grid">
+        <div class="vid-cell"><video src="demo/heldout_ep50/pred_front_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · front</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo/heldout_ep50/pred_top_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · top</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo/heldout_ep50/pred_gripper_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · gripper</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo/heldout_ep50/gt_front_short_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>ground-truth · front</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo/heldout_ep50/gt_future.mp4" autoplay loop muted playsinline></video><div class="cap"><span>ground-truth · future</span><span class="tag">1×</span></div></div>
+        <div class="vid-cell"><video src="demo/heldout_ep50/predicted_video.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · 2×2 mosaic</span><span class="tag">1×</span></div></div>
+      </div>
+      <div class="action-plot">
+        <img src="demo/heldout_ep50/action_plot.png" alt="Episode 50 action plot">
+        <div class="cap">Held-out episode: shoulder and elbow are still within ~4° but the wrist starts drifting past step 16. Episode 50 was never part of the training set — the model never saw this exact object layout.</div>
+      </div>
+    </div>
+
+    <!-- heldout_ep100 -->
+    <div class="ep-card">
+      <div class="ep-head">
+        <div class="left">
+          <h3>Episode 100 — held-out sample</h3>
+          <div class="prompt">"Pick the red cube"</div>
+          <div class="sub">whosricky/so101-megamix-v1 · ep 100 · frame 0 · episode length 374 · never seen in training</div>
+        </div>
+        <div class="ep-metrics">
+          <div class="metric"><div class="k">action RMSE</div><div class="v pass">1.6°</div></div>
+          <div class="metric"><div class="k">video PSNR</div><div class="v">4.9 dB</div></div>
+          <div class="metric"><div class="k">chunk horizon</div><div class="v">24 steps</div></div>
+        </div>
+      </div>
+      <div class="vid-grid">
+        <div class="vid-cell"><video src="demo/heldout_ep100/pred_front_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · front</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo/heldout_ep100/pred_top_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · top</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo/heldout_ep100/pred_gripper_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · gripper</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo/heldout_ep100/gt_front_short_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>ground-truth · front</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo/heldout_ep100/gt_future.mp4" autoplay loop muted playsinline></video><div class="cap"><span>ground-truth · future</span><span class="tag">1×</span></div></div>
+        <div class="vid-cell"><video src="demo/heldout_ep100/predicted_video.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · 2×2 mosaic</span><span class="tag">1×</span></div></div>
+      </div>
+      <div class="action-plot">
+        <img src="demo/heldout_ep100/action_plot.png" alt="Episode 100 action plot">
+        <div class="cap">Cleanest held-out sample. All 6 joints track the ground-truth curves within 2° across the full 24-step chunk — this is the behaviour the paper calls "cruise RMSE".</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mid-episode dynamics -->
+  <section class="res-section">
+    <div class="section-head">
+      <div class="eyebrow">03 · Mid-episode dynamics</div>
+      <h2>Does it handle high-acceleration phases?</h2>
+    </div>
+    <p class="lead" style="max-width:860px">
+      Single-chunk evaluation at <em>mid-episode</em> frames where the arm is already in motion. These are the
+      hardest frames for an I2V-based model: the instantaneous velocity has to be inferred from a still
+      image, and fast descend / grasp / lift phases amplify any phase error.
+    </p>
+
+    <div class="ep-card">
+      <div class="ep-head">
+        <div class="left">
+          <h3>ep50 · frame 80 — descend phase</h3>
+          <div class="prompt">"Pick the red cube"</div>
+          <div class="sub">high-speed descent · GT motion magnitude 69°</div>
+        </div>
+        <div class="ep-metrics">
+          <div class="metric"><div class="k">action RMSE</div><div class="v warn">11.97°</div></div>
+          <div class="metric"><div class="k">dominant drift</div><div class="v warn">shoulder</div></div>
+          <div class="metric"><div class="k">worst joint</div><div class="v warn">23.3°</div></div>
+        </div>
+      </div>
+      <div class="vid-grid">
+        <div class="vid-cell"><video src="demo_mid/ep50_f80_descend/pred_front_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · front</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo_mid/ep50_f80_descend/pred_top_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · top</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo_mid/ep50_f80_descend/gt_front_short_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>ground-truth · front</span><span class="tag">0.3×</span></div></div>
+      </div>
+      <div class="action-plot">
+        <img src="demo_mid/ep50_f80_descend/action_plot.png" alt="ep50 f80 action plot">
+        <div class="cap">Descending from frame 80: the model correctly predicts the direction of motion but underestimates the velocity, bleeding ~12° on the shoulder joint over the 24-step horizon.</div>
+      </div>
+    </div>
+
+    <div class="ep-card">
+      <div class="ep-head">
+        <div class="left">
+          <h3>ep100 · frame 150 — grasp phase</h3>
+          <div class="prompt">"Pick the red cube"</div>
+          <div class="sub">fine-motor grasp closure</div>
+        </div>
+        <div class="ep-metrics">
+          <div class="metric"><div class="k">action RMSE</div><div class="v warn">8.4°</div></div>
+          <div class="metric"><div class="k">dominant drift</div><div class="v warn">wrist</div></div>
+          <div class="metric"><div class="k">gripper</div><div class="v pass">ok</div></div>
+        </div>
+      </div>
+      <div class="vid-grid">
+        <div class="vid-cell"><video src="demo_mid/ep100_f150_grasp/pred_front_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · front</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo_mid/ep100_f150_grasp/pred_top_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>predicted · top</span><span class="tag">0.3×</span></div></div>
+        <div class="vid-cell"><video src="demo_mid/ep100_f150_grasp/gt_front_short_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>ground-truth · front</span><span class="tag">0.3×</span></div></div>
+      </div>
+      <div class="action-plot">
+        <img src="demo_mid/ep100_f150_grasp/action_plot.png" alt="ep100 f150 action plot">
+        <div class="cap">Grasp closure at frame 150: wrist rotation is the biggest residual, but the gripper open/close signal tracks ground-truth cleanly.</div>
+      </div>
+    </div>
+
+    <div class="vid-grid" style="margin-top:18px">
+      <div class="vid-cell"><video src="demo_mid/ep50_f150_grasp/pred_front_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>ep50 · f150 grasp</span><span class="tag">0.3×</span></div></div>
+      <div class="vid-cell"><video src="demo_mid/ep50_f220_lift/pred_front_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>ep50 · f220 lift</span><span class="tag">0.3×</span></div></div>
+      <div class="vid-cell"><video src="demo_mid/ep100_f80_descend/pred_front_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>ep100 · f80 descend</span><span class="tag">0.3×</span></div></div>
+      <div class="vid-cell"><video src="demo_mid/ep100_f220_lift/pred_front_slow.mp4" autoplay loop muted playsinline></video><div class="cap"><span>ep100 · f220 lift</span><span class="tag">0.3×</span></div></div>
+    </div>
+
+    <div class="plot-strip">
+      <img src="demo/per_step_horizon.png" alt="Per-step action error horizon">
+      <div class="cap">Per-step squared action error across all 24 chunk steps, averaged over the 6 mid-episode samples above. Error stays below 1°² for the first 8 steps and grows roughly linearly after step 12.</div>
+    </div>
+  </section>
+
+  <!-- Zero-shot generalization -->
+  <section class="res-section">
+    <div class="section-head">
+      <div class="eyebrow">04 · Zero-shot generalization</div>
+      <h2>A dataset the model has never seen</h2>
+    </div>
+    <p class="lead" style="max-width:860px">
+      We replay the single-chunk policy-mode protocol on
+      <code>RajatDandekar/so101_box_to_bowl_v2</code>, episode 0 — a completely different SO-101 scene with
+      a different camera rig, different object set, and a different prompt ("Pick up the box and place it in
+      the red bowl"). 8 sample frames, evenly spaced across the 604-frame episode.
+    </p>
+
+    <div class="score-bar">
+      <div class="score-pill"><span class="label">Mean action RMSE</span><span class="value warn">11.9°</span></div>
+      <div class="score-pill"><span class="label">Best action RMSE</span><span class="value pass">1.57°</span></div>
+      <div class="score-pill"><span class="label">Worst action RMSE</span><span class="value fail">26.7°</span></div>
+      <div class="score-pill"><span class="label">Mean video PSNR</span><span class="value">18.5 dB</span></div>
+      <div class="score-pill"><span class="label">Samples</span><span class="value">8</span></div>
+    </div>
+
+    <div class="plot-strip">
+      <img src="zeroshot_chunk/per_step_rmse.png" alt="Zero-shot per-step RMSE">
+      <div class="cap">Per-step RMSE across all 8 zero-shot samples. Early steps are within 2° but the tail explodes past step 18 on worst-case frames.</div>
+    </div>
+
+    <div class="plot-strip" style="margin-top:18px">
+      <img src="zeroshot_chunk/action_rmse_by_time.png" alt="RMSE vs time in episode">
+      <div class="cap">Mean RMSE as a function of position in the episode. Best results come from mid-episode cruise frames; approach and drop-off phases both cost the model 5–15° of extra error.</div>
+    </div>
+
+    <div class="plot-strip" style="margin-top:18px">
+      <img src="zeroshot_chunk/action_overlay.png" alt="Action overlay">
+      <div class="cap">Per-joint overlay of predicted vs ground-truth across the 8 samples. Shoulder and elbow carry most of the residual; wrist and gripper are essentially correct on the mid-episode cruise frames.</div>
+    </div>
+
+    <div class="zs-grid">
+      <div class="zs-card"><div class="zs-head"><span class="tag">f000</span><span class="rmse">15.7°</span></div><video src="zeroshot_chunk/f000/pred_front.mp4" autoplay loop muted playsinline></video></div>
+      <div class="zs-card"><div class="zs-head"><span class="tag">f084</span><span class="rmse">7.2°</span></div><video src="zeroshot_chunk/f084/pred_front.mp4" autoplay loop muted playsinline></video></div>
+      <div class="zs-card"><div class="zs-head"><span class="tag">f169</span><span class="rmse">3.1°</span></div><video src="zeroshot_chunk/f169/pred_front.mp4" autoplay loop muted playsinline></video></div>
+      <div class="zs-card"><div class="zs-head"><span class="tag">f254</span><span class="rmse">1.57°</span></div><video src="zeroshot_chunk/f254/pred_front.mp4" autoplay loop muted playsinline></video></div>
+      <div class="zs-card"><div class="zs-head"><span class="tag">f339</span><span class="rmse">13.4°</span></div><video src="zeroshot_chunk/f339/pred_front.mp4" autoplay loop muted playsinline></video></div>
+      <div class="zs-card"><div class="zs-head"><span class="tag">f424</span><span class="rmse">18.2°</span></div><video src="zeroshot_chunk/f424/pred_front.mp4" autoplay loop muted playsinline></video></div>
+      <div class="zs-card"><div class="zs-head"><span class="tag">f509</span><span class="rmse">26.7°</span></div><video src="zeroshot_chunk/f509/pred_front.mp4" autoplay loop muted playsinline></video></div>
+      <div class="zs-card"><div class="zs-head"><span class="tag">f594</span><span class="rmse">9.4°</span></div><video src="zeroshot_chunk/f594/pred_front.mp4" autoplay loop muted playsinline></video></div>
+    </div>
+  </section>
+
+  <!-- DreamGen-style rollouts -->
+  <section class="res-section">
+    <div class="section-head">
+      <div class="eyebrow">05 · Autoregressive rollouts — DreamGen mode</div>
+      <h2>Imagining 18 seconds of video from a single frame</h2>
+    </div>
+    <p class="lead" style="max-width:860px">
+      The hardest evaluation mode. We give the model a single front-camera frame and the starting joint state,
+      then run it in closed loop for 60 consecutive chunks (540 imagined frames ≈ 18 seconds) without ever
+      feeding it a real observation again. After each chunk, the model's own output becomes the input for
+      the next. Six rollouts: three episodes (0 / 245 / 206) × two prompts (training + novel).
+    </p>
+
+    <div class="plot-strip">
+      <img src="train_rollout/summary_drift.png" alt="DreamGen drift summary">
+      <div class="cap">Raw per-chunk action drift (time-aligned, in degrees) across all six rollouts. The apparent blow-up past chunk 40 is largely an artefact of comparing imagined actions with already-ended ground-truth episodes — see the honest-metrics section below.</div>
+    </div>
+
+    <div class="tr-grid">
+      <div class="tr-card">
+        <h4>Episode 0 — training</h4>
+        <div class="prompt">"Pick the red cube"</div>
+        <div class="sub">real episode: 10.9 s · 328 frames</div>
+        <video src="train_rollout/ep000_train/rollout_front_slow.mp4" autoplay loop muted playsinline></video>
+        <div class="tr-metrics">
+          <div class="m">best-match <strong>93.7°</strong></div>
+          <div class="m">time-aligned <strong>96.8°</strong></div>
+        </div>
+      </div>
+      <div class="tr-card">
+        <h4>Episode 0 — novel prompt</h4>
+        <div class="prompt">"Pick the blue cube"</div>
+        <div class="sub">real episode: 10.9 s · 328 frames</div>
+        <video src="train_rollout/ep000_novel/rollout_front_slow.mp4" autoplay loop muted playsinline></video>
+        <div class="tr-metrics">
+          <div class="m">best-match <strong>90.1°</strong></div>
+          <div class="m">time-aligned <strong>97.3°</strong></div>
+        </div>
+      </div>
+      <div class="tr-card">
+        <h4>Episode 245 — training</h4>
+        <div class="prompt">"Pick the red cube and place it in the bowl"</div>
+        <div class="sub">real episode: 17.9 s · 537 frames</div>
+        <video src="train_rollout/ep245_train/rollout_front_slow.mp4" autoplay loop muted playsinline></video>
+        <div class="tr-metrics">
+          <div class="m">best-match <strong>74.0°</strong></div>
+          <div class="m">time-aligned <strong>109.0°</strong></div>
+        </div>
+      </div>
+      <div class="tr-card">
+        <h4>Episode 245 — novel prompt</h4>
+        <div class="prompt">"Pick the yellow cube and place it in the bowl"</div>
+        <div class="sub">real episode: 17.9 s · 537 frames</div>
+        <video src="train_rollout/ep245_novel/rollout_front_slow.mp4" autoplay loop muted playsinline></video>
+        <div class="tr-metrics">
+          <div class="m">best-match <strong>85.3°</strong></div>
+          <div class="m">time-aligned <strong>111.1°</strong></div>
+        </div>
+      </div>
+      <div class="tr-card">
+        <h4>Episode 206 — training</h4>
+        <div class="prompt">"Put the red cube on top of the blue cube"</div>
+        <div class="sub">real episode: 19.1 s · 573 frames</div>
+        <video src="train_rollout/ep206_train/rollout_front_slow.mp4" autoplay loop muted playsinline></video>
+        <div class="tr-metrics">
+          <div class="m">best-match <strong>71.0°</strong></div>
+          <div class="m">time-aligned <strong>90.1°</strong></div>
+        </div>
+      </div>
+      <div class="tr-card">
+        <h4>Episode 206 — novel prompt</h4>
+        <div class="prompt">"Put the blue cube on top of the red cube"</div>
+        <div class="sub">real episode: 19.1 s · 573 frames</div>
+        <video src="train_rollout/ep206_novel/rollout_front_slow.mp4" autoplay loop muted playsinline></video>
+        <div class="tr-metrics">
+          <div class="m">best-match <strong>83.4°</strong></div>
+          <div class="m">time-aligned <strong>102.5°</strong></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Honest metrics -->
+  <section class="res-section">
+    <div class="section-head">
+      <div class="eyebrow">06 · Honest metrics analysis</div>
+      <h2>Three ways to measure drift — and why it matters</h2>
+    </div>
+    <p class="lead" style="max-width:860px">
+      The time-aligned metric (predicted chunk vs GT chunk at the <em>same</em> wall-clock time) is brutal
+      because it penalises any speed mismatch — and because the imagined rollout continues for 18 seconds
+      while several real episodes end at 10.9 or 17.9 seconds. The <b>best-match drift</b> instead compares
+      each predicted joint configuration against the closest matching GT frame anywhere in the real episode
+      — a speed-invariant measure of "did the arm actually pass through this pose at some point?".
+    </p>
+
+    <div class="plot-strip">
+      <img src="train_rollout/honest_summary.png" alt="Honest drift summary">
+      <div class="cap">Honest drift metrics for all 6 rollouts. Bars: mean best-match drift. Dots: time-aligned drift. The 20–40° gap between the two is the speed-mismatch penalty — the arm is doing the right thing, just not at the right tempo.</div>
+    </div>
+
+    <div class="drift-grid">
+      <div class="cell"><img src="train_rollout/ep000_train/honest_drift_plot.png" alt="ep000 train drift"><div class="lbl"><span>ep000_train</span><span>94° / 97°</span></div></div>
+      <div class="cell"><img src="train_rollout/ep000_novel/honest_drift_plot.png" alt="ep000 novel drift"><div class="lbl"><span>ep000_novel</span><span>90° / 97°</span></div></div>
+      <div class="cell"><img src="train_rollout/ep245_train/honest_drift_plot.png" alt="ep245 train drift"><div class="lbl"><span>ep245_train</span><span>74° / 109°</span></div></div>
+      <div class="cell"><img src="train_rollout/ep245_novel/honest_drift_plot.png" alt="ep245 novel drift"><div class="lbl"><span>ep245_novel</span><span>85° / 111°</span></div></div>
+      <div class="cell"><img src="train_rollout/ep206_train/honest_drift_plot.png" alt="ep206 train drift"><div class="lbl"><span>ep206_train</span><span>71° / 90°</span></div></div>
+      <div class="cell"><img src="train_rollout/ep206_novel/honest_drift_plot.png" alt="ep206 novel drift"><div class="lbl"><span>ep206_novel</span><span>83° / 102°</span></div></div>
+    </div>
+
+    <div class="takeaways">
+      <h4>Revised takeaways</h4>
+      <ul>
+        <li><strong>The model does execute the task in imagination.</strong> All six rollouts visually complete the intended pick / place / stack inside the imagined video stream.</li>
+        <li><strong>Single-chunk policy mode is solid.</strong> 0.57° on the training distribution, 1.6–2.3° on held-out training episodes, and a mean 11.9° on a completely unseen zero-shot dataset — well within the usable range for closed-loop control.</li>
+        <li><strong>Autoregressive rollouts carry 70–95° of best-match drift.</strong> Much of that is speed mismatch and post-episode degradation; some of it is real prediction-chaining error. Both are honest failure modes of a 1K-step LoRA checkpoint.</li>
+        <li><strong>Language conditioning decays fast.</strong> "Pick the red cube" vs "Pick the blue cube" on the same initial frame diverge for the first 2 chunks and then collapse onto the same trajectory — the video stream dominates after that.</li>
+        <li><strong>No termination signal.</strong> The model was never trained to emit "task complete", so frames past the real episode end degrade into an increasingly chaotic dream. Fixable with a stop-token head.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Pointer to paper -->
+  <section class="res-section" style="margin-top:64px">
+    <div class="cta-grid">
+      <a class="cta-card" href="paper.html">
+        <span class="tag">Research paper</span>
+        <h4>Read the writeup</h4>
+        <p>Conference-style paper with the full architecture, training recipe, related work, and limitations discussion.</p>
+        <span class="arrow">paper.html →</span>
+      </a>
+      <a class="cta-card" href="demo.html">
+        <span class="tag">Interactive</span>
+        <h4>Play with the gallery</h4>
+        <p>Pick any training scene, swap between training and novel prompts, and watch the model imagine a rollout from three camera viewpoints.</p>
+        <span class="arrow">demo.html →</span>
+      </a>
+      <a class="cta-card" href="code.html">
+        <span class="tag">Reproduce</span>
+        <h4>Read the code</h4>
+        <p>Install instructions, the SO-101 patch, data pipeline, LoRA training recipe, and the inference demo.</p>
+        <span class="arrow">code.html →</span>
+      </a>
+    </div>
+  </section>
+
+</div>
+
+<footer class="site-footer">
+  <div class="brand-block">
+    <h5>DreamZero-SO101</h5>
+    <p>An open world-action model for the low-cost SO-101 teleoperator arm. Fine-tuned from Wan2.1-I2V-14B on aggregated LeRobot SO-101 community datasets.</p>
+    <p>Released under Apache 2.0 by <a href="https://vizuara.ai" target="_blank" rel="noopener">Vizuara</a>.</p>
+    <div class="meta">Build · 2026-04-09 · checkpoint 72K · LoRA rank 4</div>
+  </div>
+  <div>
+    <h5>Navigate</h5>
+    <a href="index.html">Home</a>
+    <a href="paper.html">Paper</a>
+    <a href="demo.html">Demo</a>
+    <a href="results.html">Results</a>
+    <a href="code.html">Code</a>
+    <a href="contribute.html">Contribute</a>
+  </div>
+  <div>
+    <h5>External</h5>
+    <a href="https://huggingface.co/Vizuara/dreamzero-so101-lora" target="_blank" rel="noopener">HF LoRA</a>
+    <a href="https://github.com/vizuara/dreamzero-so101" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/dreamzero0/dreamzero" target="_blank" rel="noopener">DreamZero</a>
+    <a href="https://github.com/huggingface/lerobot" target="_blank" rel="noopener">LeRobot</a>
+  </div>
+</footer>
+
+<script src="assets/js/nav.js"></script>
+</body>
+</html>

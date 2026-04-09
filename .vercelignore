@@ -1,0 +1,5 @@
+build_report.py
+build_mid_report.py
+slow_videos.py
+*.pyc
+__pycache__

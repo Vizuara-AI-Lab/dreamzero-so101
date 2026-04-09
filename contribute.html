@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DreamZero-SO101 — Contribute Data</title>
+<meta name="description" content="Contribute your SO-101 recordings to DreamZero-SO101. Record episodes, format as LeRobot, upload to HuggingFace, and help improve the model for everyone." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/layout.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<style>
+  /* Flow steps */
+  .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin: 36px 0; position: relative; }
+  @media (max-width: 960px) { .flow { grid-template-columns: 1fr; } }
+  .flow-step { background: var(--panel); border: 1px solid var(--line); padding: 22px 20px; position: relative; }
+  .flow-step:not(:last-child)::after { content: '→'; position: absolute; right: -14px; top: 50%; transform: translateY(-50%); color: var(--accent); font-size: 18px; z-index: 1; }
+  @media (max-width: 960px) { .flow-step:not(:last-child)::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -14px; transform: translateX(-50%); } }
+  .flow-step:first-child { border-radius: 10px 0 0 10px; }
+  .flow-step:last-child { border-radius: 0 10px 10px 0; }
+  @media (max-width: 960px) { .flow-step { border-radius: 8px !important; margin-bottom: 20px; } }
+  .flow-step .num { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--accent); margin-bottom: 8px; }
+  .flow-step h4 { font-size: 15px; margin: 0 0 6px; }
+  .flow-step p { font-size: 12.5px; color: var(--ink-dim); margin: 0; line-height: 1.5; }
+
+  /* Dataset spec table */
+  .spec-table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 13.5px; }
+  .spec-table th { background: var(--panel2); color: var(--ink); padding: 8px 12px; border: 1px solid var(--line); font-weight: 600; text-align: left; font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .spec-table td { padding: 7px 12px; border: 1px solid var(--line); color: var(--ink-dim); vertical-align: top; }
+  .spec-table td code { font-family: var(--font-mono); font-size: 12px; background: var(--panel2); padding: 1px 4px; border-radius: 3px; color: var(--warm); }
+  .spec-table td.req { color: var(--pass); font-weight: 600; font-family: var(--font-mono); font-size: 12px; }
+
+  pre.cblock {
+    background: var(--panel2); border: 1px solid var(--line); border-radius: 8px;
+    padding: 18px 20px; font-family: var(--font-mono); font-size: 13px; line-height: 1.7;
+    color: var(--warm); overflow-x: auto; margin: 18px 0 0; white-space: pre;
+  }
+  pre.cblock .cm { color: var(--ink-faint); }
+
+  /* Roadmap */
+  .roadmap { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 24px 0; }
+  @media (max-width: 760px) { .roadmap { grid-template-columns: 1fr; } }
+  .rm-card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
+  .rm-card .phase { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-faint); margin-bottom: 6px; }
+  .rm-card h4 { margin: 0 0 8px; font-size: 15px; }
+  .rm-card ul { margin: 0; padding-left: 16px; font-size: 13px; color: var(--ink-dim); line-height: 1.7; }
+  .rm-card.active { border-color: var(--accent); }
+  .rm-card.active .phase { color: var(--accent); }
+
+  /* Why contribute */
+  .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 28px 0; }
+  @media (max-width: 900px) { .why-grid { grid-template-columns: 1fr; } }
+  .why-card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 22px; }
+  .why-card .icon { font-size: 28px; margin-bottom: 10px; }
+  .why-card h4 { margin: 0 0 8px; font-size: 15px; }
+  .why-card p { font-size: 13px; color: var(--ink-dim); margin: 0; line-height: 1.55; }
+
+  /* CTA email block */
+  .cta-email { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 32px 36px; margin-top: 40px; text-align: center; }
+  .cta-email h3 { margin: 0 0 10px; }
+  .cta-email p { color: var(--ink-dim); font-size: 14.5px; margin: 0 0 20px; }
+  .cta-email .btn { display: inline-block; background: var(--accent); color: var(--bg); font-family: var(--font-mono); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 12px 28px; border-radius: 6px; text-decoration: none; }
+  .cta-email .btn:hover { opacity: 0.85; }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="index.html" class="topnav-brand"><span class="dot"></span>DreamZero-SO101</a>
+    <div class="topnav-links">
+      <a href="index.html">Home</a>
+      <a href="paper.html">Paper</a>
+      <a href="demo.html">Demo</a>
+      <a href="results.html">Results</a>
+      <a href="code.html">Code</a>
+      <a href="contribute.html">Contribute</a>
+    </div>
+    <div class="topnav-ext">
+      <a href="https://huggingface.co/Vizuara/dreamzero-so101-lora" target="_blank" rel="noopener">HF Model</a>
+      <a href="https://github.com/vizuara/dreamzero-so101" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <section class="hero" style="padding-bottom:16px">
+    <span class="kicker">Community · Data Flywheel</span>
+    <h1 style="margin-top:18px;font-size:46px">Help make this model<br/><span class="accent">better for everyone.</span></h1>
+    <p class="lead">
+      DreamZero-SO101 was trained on 715 episodes contributed by the SO-101 community. Every new episode
+      improves the model's generalisation — especially zero-shot performance on novel objects, camera rigs,
+      and task phrasings. If you own an SO-101, you can contribute.
+    </p>
+  </section>
+
+  <!-- Why contribute -->
+  <div class="section-head" style="margin-top:56px">
+    <div class="eyebrow">Why contribute</div>
+    <h2>Your data makes a measurable difference</h2>
+  </div>
+
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="icon">📈</div>
+      <h4>Better zero-shot generalisation</h4>
+      <p>Our zero-shot RMSE is 11.9° vs 2.3° on held-out training episodes — a 5× gap. More diverse scenes, objects, and camera positions directly close this gap.</p>
+    </div>
+    <div class="why-card">
+      <div class="icon">🔄</div>
+      <h4>Flywheel effect</h4>
+      <p>More data → better model → more SO-101 adopters → more contributors. We are at the beginning of this curve. Your 30 episodes matter more now than they will after 10,000 total.</p>
+    </div>
+    <div class="why-card">
+      <div class="icon">🏆</div>
+      <h4>Credit and recognition</h4>
+      <p>Every contributor is credited in the model card, README, and release notes. Your HuggingFace handle appears next to the dataset table in every future checkpoint.</p>
+    </div>
+  </div>
+
+  <!-- Contribution flow -->
+  <div class="section-head" style="margin-top:72px">
+    <div class="eyebrow">How it works</div>
+    <h2>Five steps from recording to release</h2>
+  </div>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="num">Step 01</div>
+      <h4>Record</h4>
+      <p>Use LeRobot v0.4+ with your SO-101. Record at least 30 episodes of any manipulation task.</p>
+    </div>
+    <div class="flow-step">
+      <div class="num">Step 02</div>
+      <h4>Format</h4>
+      <p>Push to HuggingFace Hub with <code>push_dataset_to_hub()</code> using the LeRobot schema.</p>
+    </div>
+    <div class="flow-step">
+      <div class="num">Step 03</div>
+      <h4>Submit</h4>
+      <p>Open a PR on GitHub adding your dataset to the manifest, or email us the HF URL.</p>
+    </div>
+    <div class="flow-step">
+      <div class="num">Step 04</div>
+      <h4>Retrain</h4>
+      <p>Vizuara downloads, converts, and retrains from the latest checkpoint. ~127h on 2× H100.</p>
+    </div>
+    <div class="flow-step">
+      <div class="num">Step 05</div>
+      <h4>Release</h4>
+      <p>New checkpoint released to <code>Vizuara/dreamzero-so101-lora</code>. You're in the credits.</p>
+    </div>
+  </div>
+
+  <!-- Data format spec -->
+  <div class="section-head" style="margin-top:72px">
+    <div class="eyebrow">Data format</div>
+    <h2>What your dataset needs</h2>
+  </div>
+  <p class="lead" style="max-width:720px">
+    We accept any LeRobot v2+ format dataset. The following fields are required for inclusion in the
+    training pipeline. Optional fields improve quality.
+  </p>
+
+  <table class="spec-table">
+    <thead><tr><th>Field</th><th>Required?</th><th>Spec</th></tr></thead>
+    <tbody>
+      <tr><td><code>observation.images.*</code></td><td class="req">required</td><td>At least 1 RGB camera stream at ≥ 15 FPS. Resolution ≥ 240p. Front camera preferred.</td></tr>
+      <tr><td><code>action</code></td><td class="req">required</td><td>6-DOF joint positions in degrees: [shoulder_pan, shoulder_lift, elbow_flex, wrist_flex, wrist_roll, gripper]. Shape: [T, 6].</td></tr>
+      <tr><td><code>task_description</code> / <code>language_instruction</code></td><td class="req">required</td><td>A plain-English description of the task, e.g. "Pick up the red block and place it in the bin".</td></tr>
+      <tr><td><code>fps</code> in meta</td><td class="req">required</td><td>Frame rate. We resample to 30 FPS during conversion.</td></tr>
+      <tr><td><code>observation.images.top</code></td><td>optional</td><td>Top-down camera. Strongly recommended — the current model was trained with 3 cameras.</td></tr>
+      <tr><td><code>observation.images.gripper</code></td><td>optional</td><td>Wrist/gripper camera. Improves fine-motor predictions.</td></tr>
+      <tr><td><code>observation.state</code></td><td>optional</td><td>Proprioceptive joint state at each frame. Helps with mid-episode chunk evaluations.</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Recording recipe -->
+  <div class="section-head" style="margin-top:60px">
+    <div class="eyebrow">Recording recipe</div>
+    <h2>LeRobot quickstart</h2>
+  </div>
+
+  <pre class="cblock"><span class="cm"># Record with LeRobot v0.4+ (assumes SO-101 is connected and calibrated)</span>
+python lerobot/scripts/record.py \
+    --robot.type=so101_follower \
+    --teleop.type=so101_leader \
+    --dataset.repo_id=your-handle/so101-my-task-50ep \
+    --dataset.fps=30 \
+    --dataset.num_episodes=50 \
+    --dataset.task="Pick up the red block and place it in the bin"
+
+<span class="cm"># Push to HuggingFace Hub</span>
+python lerobot/scripts/push_dataset_to_hub.py \
+    --dataset.repo_id=your-handle/so101-my-task-50ep</pre>
+
+  <pre class="cblock"><span class="cm"># Then open a PR on GitHub, adding your dataset to scripts/enumerate_so101.py:</span>
+COMMUNITY_DATASETS = [
+    "whosricky/so101-megamix-v1",
+    "lipsop/so101-block-in-bin-100ep",
+    <span class="cm"># ... existing entries ...</span>
+    "your-handle/so101-my-task-50ep",  <span class="cm"># ← add your line here</span>
+]</pre>
+
+  <!-- Roadmap -->
+  <div class="section-head" style="margin-top:72px">
+    <div class="eyebrow">Roadmap</div>
+    <h2>Where we're taking this</h2>
+  </div>
+
+  <div class="roadmap">
+    <div class="rm-card active">
+      <div class="phase">Current · checkpoint 72K</div>
+      <h4>LoRA baseline</h4>
+      <ul>
+        <li>715 episodes, 108M LoRA</li>
+        <li>Policy mode: 1.6–2.3° held-out RMSE</li>
+        <li>Zero-shot: 11.9° mean RMSE</li>
+        <li>DreamGen: task visually completed in imagination</li>
+      </ul>
+    </div>
+    <div class="rm-card">
+      <div class="phase">Next · community contributions</div>
+      <h4>Expanded LoRA (target 2K+ episodes)</h4>
+      <ul>
+        <li>Community data drive — your data here</li>
+        <li>Target: zero-shot RMSE under 5°</li>
+        <li>More task categories (pour, sort, assemble)</li>
+        <li>Checkpoint released once 500 new episodes in</li>
+      </ul>
+    </div>
+    <div class="rm-card">
+      <div class="phase">Phase 2 · full fine-tune</div>
+      <h4>14B full FT (target 10K+ episodes)</h4>
+      <ul>
+        <li>Full backbone fine-tune (4× H100, ~28h)</li>
+        <li>Task-completion token to fix post-episode drift</li>
+        <li>Multi-camera ablation study</li>
+        <li>Release: <code>Vizuara/dreamzero-so101-14b</code></li>
+      </ul>
+    </div>
+    <div class="rm-card">
+      <div class="phase">Phase 3 · embodiment expansion</div>
+      <h4>Multi-arm support</h4>
+      <ul>
+        <li>Koch v1.1 arm support</li>
+        <li>Moss bimanual arm support</li>
+        <li>HuggingFace Hub dataset partnership</li>
+        <li>Live inference endpoint</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- HF partnership / CTA -->
+  <div class="section-head" style="margin-top:72px">
+    <div class="eyebrow">Get in touch</div>
+    <h2>HuggingFace partnership &amp; custom requests</h2>
+  </div>
+  <p class="lead" style="max-width:720px">
+    We're looking for a HuggingFace Hub dataset partnership to streamline contributor onboarding —
+    automatic GEAR conversion, contributor leaderboard, and co-branded model releases. If you work at
+    HuggingFace or know someone who does, please get in touch.
+  </p>
+  <p class="lead" style="max-width:720px">
+    For organisations with larger SO-101 deployments (10+ arms, enterprise data), we offer custom
+    fine-tuning runs and evaluation support.
+  </p>
+
+  <div class="cta-email">
+    <h3>Contribute data or partner with Vizuara</h3>
+    <p>Tell us your HuggingFace dataset URL, the task category, and the number of episodes.</p>
+    <a class="btn" href="mailto:team@vizuara.ai?subject=DreamZero-SO101%20data%20contribution">Email team@vizuara.ai</a>
+  </div>
+
+  <!-- Community datasets table -->
+  <div class="section-head" style="margin-top:72px">
+    <div class="eyebrow">Community datasets</div>
+    <h2>Current training set — checkpoint 72K</h2>
+  </div>
+
+  <table class="spec-table">
+    <thead><tr><th>Dataset</th><th>Contributor</th><th>Episodes</th><th>Tasks</th><th>Cameras</th></tr></thead>
+    <tbody>
+      <tr><td><code>whosricky/so101-megamix-v1</code></td><td>whosricky</td><td>400</td><td>8</td><td>3</td></tr>
+      <tr><td><code>lipsop/so101-block-in-bin-100ep</code></td><td>lipsop</td><td>100</td><td>1</td><td>2</td></tr>
+      <tr><td><code>youliangtan/so101-table-cleanup</code></td><td>youliangtan</td><td>80</td><td>4</td><td>2</td></tr>
+      <tr><td><code>G3ND3K/so101_picking_up_green_lego_big</code></td><td>G3ND3K</td><td>60</td><td>1</td><td>2</td></tr>
+      <tr><td><code>lerobot/svla_so101_pickplace</code></td><td>LeRobot team</td><td>50</td><td>1</td><td>2</td></tr>
+      <tr><td><code>observabot/so101_cloth_folding1</code></td><td>observabot</td><td>25</td><td>1</td><td>3</td></tr>
+      <tr><td colspan="5" style="text-align:center;color:var(--ink-faint);font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em">YOUR DATASET COULD BE HERE — open a PR</td></tr>
+    </tbody>
+  </table>
+
+</div>
+
+<footer class="site-footer">
+  <div class="brand-block">
+    <h5>DreamZero-SO101</h5>
+    <p>An open world-action model for the low-cost SO-101 teleoperator arm. Fine-tuned from Wan2.1-I2V-14B on community-contributed LeRobot datasets.</p>
+    <p>Released under Apache 2.0 by <a href="https://vizuara.ai" target="_blank" rel="noopener">Vizuara</a>.</p>
+    <div class="meta">Build · 2026-04-09 · checkpoint 72K · LoRA rank 4</div>
+  </div>
+  <div>
+    <h5>Navigate</h5>
+    <a href="index.html">Home</a>
+    <a href="paper.html">Paper</a>
+    <a href="demo.html">Demo</a>
+    <a href="results.html">Results</a>
+    <a href="code.html">Code</a>
+    <a href="contribute.html">Contribute</a>
+  </div>
+  <div>
+    <h5>External</h5>
+    <a href="https://huggingface.co/Vizuara/dreamzero-so101-lora" target="_blank" rel="noopener">HF LoRA</a>
+    <a href="https://github.com/vizuara/dreamzero-so101" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/huggingface/lerobot" target="_blank" rel="noopener">LeRobot</a>
+  </div>
+</footer>
+
+<script src="assets/js/nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+[
+  {
+    "tag": "ep000_train",
+    "time_aligned_mean": 96.82218400641906,
+    "time_aligned_final": 165.4361344286802,
+    "best_match_mean": 93.72887306920381,
+    "best_match_final": 180.72292094285962,
+    "ep_end_sec": 10.933333333333334
+  },
+  {
+    "tag": "ep000_novel",
+    "time_aligned_mean": 97.28500832750484,
+    "time_aligned_final": 169.82701906866046,
+    "best_match_mean": 90.05490221392249,
+    "best_match_final": 173.38584149386355,
+    "ep_end_sec": 10.933333333333334
+  },
+  {
+    "tag": "ep245_train",
+    "time_aligned_mean": 108.97301145899104,
+    "time_aligned_final": 194.0420466586784,
+    "best_match_mean": 73.97849773284003,
+    "best_match_final": 159.00302949341557,
+    "ep_end_sec": 17.9
+  },
+  {
+    "tag": "ep245_novel",
+    "time_aligned_mean": 111.1123356112795,
+    "time_aligned_final": 201.75046657323887,
+    "best_match_mean": 85.29263611826407,
+    "best_match_final": 193.632910335903,
+    "ep_end_sec": 17.9
+  },
+  {
+    "tag": "ep206_train",
+    "time_aligned_mean": 90.10852435089308,
+    "time_aligned_final": 192.55696172099954,
+    "best_match_mean": 70.96506645885985,
+    "best_match_final": 145.77624160448048,
+    "ep_end_sec": 19.1
+  },
+  {
+    "tag": "ep206_novel",
+    "time_aligned_mean": 102.49185223370577,
+    "time_aligned_final": 219.33338196026628,
+    "best_match_mean": 83.42532353221658,
+    "best_match_final": 192.90629919151903,
+    "ep_end_sec": 19.1
+  }
+]

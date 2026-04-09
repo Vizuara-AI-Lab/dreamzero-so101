@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DreamZero-SO101 — Code & Reproduce</title>
+<meta name="description" content="Install instructions, SO-101 patch, data pipeline, LoRA training recipe, evaluation scripts, and inference demo for DreamZero-SO101." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/layout.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<style>
+  .code-section { margin-top: 72px; }
+  .code-section:first-of-type { margin-top: 0; }
+  pre.cblock {
+    background: var(--panel2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 18px 20px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--warm);
+    overflow-x: auto;
+    margin: 18px 0 0;
+    white-space: pre;
+  }
+  pre.cblock .cm { color: var(--ink-faint); }
+  pre.cblock .kw { color: var(--accent); }
+  pre.cblock .st { color: var(--teal); }
+
+  .step-list { counter-reset: steps; list-style: none; padding: 0; margin: 24px 0; }
+  .step-list > li { counter-increment: steps; display: flex; gap: 18px; margin-bottom: 28px; }
+  .step-list > li::before { content: counter(steps); min-width: 32px; height: 32px; border-radius: 50%; background: var(--accent); color: var(--bg); font-family: var(--font-mono); font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+  .step-list > li .body h4 { margin: 0 0 6px; font-size: 16px; }
+  .step-list > li .body p { margin: 0 0 8px; color: var(--ink-dim); font-size: 14px; }
+  .step-list > li .body code { font-family: var(--font-mono); font-size: 12px; background: var(--panel2); padding: 1px 5px; border-radius: 3px; color: var(--warm); }
+
+  .param-table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 13.5px; }
+  .param-table th { background: var(--panel2); color: var(--ink); padding: 8px 12px; border: 1px solid var(--line); font-weight: 600; text-align: left; font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .param-table td { padding: 7px 12px; border: 1px solid var(--line); color: var(--ink-dim); vertical-align: top; }
+  .param-table td code { font-family: var(--font-mono); font-size: 12px; background: var(--panel2); padding: 1px 4px; border-radius: 3px; color: var(--warm); }
+  .param-table td strong { color: var(--ink); }
+
+  .note { background: var(--panel); border: 1px solid var(--line); border-left: 3px solid var(--blue); border-radius: 8px; padding: 14px 18px; margin: 16px 0; font-size: 13.5px; color: var(--ink-dim); }
+  .note strong { color: var(--ink); }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="index.html" class="topnav-brand"><span class="dot"></span>DreamZero-SO101</a>
+    <div class="topnav-links">
+      <a href="index.html">Home</a>
+      <a href="paper.html">Paper</a>
+      <a href="demo.html">Demo</a>
+      <a href="results.html">Results</a>
+      <a href="code.html">Code</a>
+      <a href="contribute.html">Contribute</a>
+    </div>
+    <div class="topnav-ext">
+      <a href="https://huggingface.co/Vizuara/dreamzero-so101-lora" target="_blank" rel="noopener">HF Model</a>
+      <a href="https://github.com/vizuara/dreamzero-so101" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+
+  <section class="hero" style="padding-bottom:16px">
+    <span class="kicker">Reproduce · Code Reference</span>
+    <h1 style="margin-top:18px;font-size:46px">From data to<br/><span class="accent">deployed rollout.</span></h1>
+    <p class="lead" style="margin-bottom:10px">
+      Everything you need to replicate DreamZero-SO101 from scratch — or to run inference on your own SO-101 footage. The codebase is at
+      <a href="https://github.com/vizuara/dreamzero-so101" target="_blank" rel="noopener" style="color:var(--accent)">github.com/vizuara/dreamzero-so101</a>.
+    </p>
+  </section>
+
+  <!-- Install -->
+  <div class="section-head" style="margin-top:56px">
+    <div class="eyebrow">Step 1</div>
+    <h2>Install</h2>
+  </div>
+  <p class="lead" style="max-width:720px">Clone DreamZero-SO101, apply the SO-101 patch to the upstream DreamZero codebase, and download the pre-trained weights.</p>
+
+  <pre class="cblock"><span class="cm"># 1. Clone DreamZero-SO101</span>
+git clone https://github.com/vizuara/dreamzero-so101.git
+cd dreamzero-so101
+
+<span class="cm"># 2. Clone upstream DreamZero (Apache 2.0) and install</span>
+git clone https://github.com/dreamzero0/dreamzero.git
+cd dreamzero && pip install -e . && cd ..
+
+<span class="cm"># 3. Apply SO-101 embodiment patch</span>
+cd dreamzero && git apply ../patches/so101_embodiment.patch && cd ..
+
+<span class="cm"># 4. Download Wan2.1-I2V-14B backbone (~120 GB)</span>
+huggingface-cli download Wan-AI/Wan2.1-I2V-14B-480P \
+    --local-dir ./checkpoints/Wan2.1-I2V-14B-480P
+
+<span class="cm"># 5. Download DreamZero-SO101 LoRA adapter (217 MB)</span>
+huggingface-cli download Vizuara/dreamzero-so101-lora \
+    --local-dir ./checkpoints/dreamzero-so101-lora</pre>
+
+  <div class="note"><strong>Note:</strong> The backbone requires ~120 GB of disk space. A single H100 80GB is sufficient for inference (4 Euler steps, ~600 ms/chunk). Training requires 2× H100 with DeepSpeed ZeRO-2.</div>
+
+  <!-- Data pipeline -->
+  <div class="section-head" style="margin-top:72px">
+    <div class="eyebrow">Step 2</div>
+    <h2>Data pipeline</h2>
+  </div>
+  <p class="lead" style="max-width:720px">Discover SO-101 datasets on HuggingFace, download them, and convert to GEAR format (the aligned triplet format DreamZero trains on).</p>
+
+  <pre class="cblock"><span class="cm"># Discover all SO-101 datasets on HuggingFace Hub</span>
+python scripts/enumerate_so101.py --output so101_manifest.json
+
+<span class="cm"># Download and convert to GEAR format</span>
+<span class="cm"># Produces: ./data/so101_gear/{split}/XXXXX.{mp4,json}</span>
+python scripts/download_and_convert.py \
+    --manifest so101_manifest.json \
+    --output-dir ./data/so101_gear \
+    --dreamzero-dir ./dreamzero</pre>
+
+  <p style="color:var(--ink-dim);font-size:14px;margin-top:16px">
+    Each GEAR sample is a triplet of: a camera-frame chunk (9 latent frames), a 6-DOF joint state vector,
+    and a 24-step action chunk. The conversion script handles padding for episodes with fewer than 3 cameras
+    and resamples to 30 FPS if the source dataset is at a different frame rate.
+  </p>
+
+  <h3 style="margin-top:32px;font-size:17px">SO-101 datasets used for checkpoint 72K</h3>
+  <table class="param-table">
+    <thead><tr><th>Dataset</th><th>Episodes</th><th>Tasks</th><th>Cameras</th></tr></thead>
+    <tbody>
+      <tr><td><code>whosricky/so101-megamix-v1</code></td><td>400</td><td>8</td><td>3</td></tr>
+      <tr><td><code>lipsop/so101-block-in-bin-100ep</code></td><td>100</td><td>1</td><td>2</td></tr>
+      <tr><td><code>youliangtan/so101-table-cleanup</code></td><td>80</td><td>4</td><td>2</td></tr>
+      <tr><td><code>G3ND3K/so101_picking_up_green_lego_big</code></td><td>60</td><td>1</td><td>2</td></tr>
+      <tr><td><code>lerobot/svla_so101_pickplace</code></td><td>50</td><td>1</td><td>2</td></tr>
+      <tr><td><code>observabot/so101_cloth_folding1</code></td><td>25</td><td>1</td><td>3</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Training -->
+  <div class="section-head" style="margin-top:72px">
+    <div class="eyebrow">Step 3</div>
+    <h2>Training</h2>
+  </div>
+  <p class="lead" style="max-width:720px">Two training modes: LoRA (recommended — cheap, fast, good quality) and Full Fine-Tune (best quality, needs 4× H100).</p>
+
+  <h3 style="margin-top:28px;font-size:17px">LoRA training (recommended)</h3>
+  <pre class="cblock"><span class="cm"># Set environment variables</span>
+export WAN_CKPT_DIR=./checkpoints/Wan2.1-I2V-14B-480P
+export SO101_DATA_DIR=./data/so101_gear
+export TOKENIZER_DIR=./checkpoints/umt5-xxl
+
+<span class="cm"># Launch LoRA training on 2× H100, converges around 70K steps</span>
+bash scripts/train_lora.sh 2 100000</pre>
+
+  <h3 style="margin-top:28px;font-size:17px">Full fine-tune (best quality)</h3>
+  <pre class="cblock"><span class="cm"># 4× H100, ~28 hours (~$336 on RunPod)</span>
+bash scripts/train_full.sh 4 100000</pre>
+
+  <h3 style="margin-top:28px;font-size:17px">Training hyperparameters</h3>
+  <table class="param-table">
+    <thead><tr><th>Parameter</th><th>LoRA</th><th>Full FT</th></tr></thead>
+    <tbody>
+      <tr><td>Trainable params</td><td>~108M LoRA + action heads</td><td>14B (all DiT) + action heads</td></tr>
+      <tr><td>Learning rate</td><td><code>1e-4</code></td><td><code>1e-5</code></td></tr>
+      <tr><td>Batch size</td><td>1 per GPU</td><td>1 per GPU</td></tr>
+      <tr><td>Gradient accumulation</td><td>4</td><td>4</td></tr>
+      <tr><td>GPUs</td><td>2× H100</td><td>4× H100</td></tr>
+      <tr><td>DeepSpeed</td><td>ZeRO-2</td><td>ZeRO-2 + CPU offload</td></tr>
+      <tr><td>Resolution</td><td>320×176</td><td>320×176</td></tr>
+      <tr><td>Video frames</td><td>33 (→ 9 latent)</td><td>33 (→ 9 latent)</td></tr>
+      <tr><td>Action horizon</td><td>24 steps</td><td>24 steps</td></tr>
+      <tr><td>LoRA rank</td><td>4</td><td>N/A</td></tr>
+      <tr><td>LoRA targets</td><td>q, k, v, o, ffn.0, ffn.2</td><td>N/A</td></tr>
+      <tr><td>Steps to convergence</td><td>~72K (~127h on 2×H100)</td><td>~50K (~28h on 4×H100)</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Evaluation -->
+  <div class="section-head" style="margin-top:72px">
+    <div class="eyebrow">Step 4</div>
+    <h2>Evaluation</h2>
+  </div>
+  <p class="lead" style="max-width:720px">Five sanity tests + single-chunk policy-mode evaluation + autoregressive DreamGen rollout.</p>
+
+  <pre class="cblock"><span class="cm"># Run offline evaluation (single-chunk policy mode)</span>
+python scripts/evaluate.py \
+    --model-path ./checkpoints/dreamzero-so101-lora \
+    --data-dir ./data/so101_gear \
+    --base-model-path ./checkpoints/Wan2.1-I2V-14B-480P \
+    --output-dir ./eval_output
+
+<span class="cm"># Run DreamGen autoregressive rollout for one episode</span>
+python scripts/evaluate.py \
+    --model-path ./checkpoints/dreamzero-so101-lora \
+    --base-model-path ./checkpoints/Wan2.1-I2V-14B-480P \
+    --episode 0 \
+    --prompt "Pick the red cube" \
+    --mode dreamgen \
+    --n-chunks 60 \
+    --output-dir ./rollout_ep0</pre>
+
+  <p style="color:var(--ink-dim);font-size:14px;margin-top:16px">
+    The evaluation script writes per-sample <code>meta.json</code>, <code>action_plot.png</code>,
+    <code>pred_front.mp4</code>, and <code>honest_drift_plot.png</code> to the output directory — the same
+    artefacts shown in the <a href="results.html" style="color:var(--accent)">Results</a> page.
+  </p>
+
+  <!-- Inference Demo -->
+  <div class="section-head" style="margin-top:72px">
+    <div class="eyebrow">Step 5</div>
+    <h2>Inference demo</h2>
+  </div>
+  <p class="lead" style="max-width:720px">Run a single-shot inference on any SO-101 camera frame using the released LoRA adapter.</p>
+
+  <pre class="cblock"><span class="cm"># Single-shot inference demo</span>
+python scripts/infer_demo.py \
+    --model-path ./checkpoints/dreamzero-so101-lora \
+    --base-model-path ./checkpoints/Wan2.1-I2V-14B-480P \
+    --image ./sample_obs.jpg \
+    --joint-state "-0.47 -99.23 95.37 67.74 -1.64 1.99" \
+    --prompt "Pick the red cube" \
+    --output ./infer_output
+
+<span class="cm"># Output: infer_output/pred_front.mp4 (predicted video) +</span>
+<span class="cm">#         infer_output/actions.json (24 predicted joint commands)</span></pre>
+
+  <div class="note">
+    <strong>Inference time:</strong> ~600 ms/chunk on a single H100 80GB at 4 Euler steps.
+    On a 40GB A100 expect ~900 ms. CPU inference is not practical (hours/chunk).
+    The LoRA adapter is ~217 MB; the backbone requires ~120 GB of disk but only ~80 GB of GPU RAM at fp16.
+  </div>
+
+  <!-- Repo structure -->
+  <div class="section-head" style="margin-top:72px">
+    <div class="eyebrow">Reference</div>
+    <h2>Repository structure</h2>
+  </div>
+
+  <pre class="cblock">dreamzero-so101/
+├── README.md
+├── patches/
+│   └── so101_embodiment.patch   <span class="cm"># Adds SO-101 to DreamZero's embodiment registry</span>
+├── configs/
+│   ├── so101_lora.yaml          <span class="cm"># LoRA training config</span>
+│   ├── so101_full_ft.yaml       <span class="cm"># Full fine-tune config</span>
+│   ├── so101_inference.yaml     <span class="cm"># Inference config</span>
+│   └── so101_relative.yaml      <span class="cm"># GEAR data config (installed via patch)</span>
+├── scripts/
+│   ├── enumerate_so101.py       <span class="cm"># Find SO-101 datasets on HuggingFace Hub</span>
+│   ├── download_and_convert.py  <span class="cm"># Download + GEAR format conversion</span>
+│   ├── train_lora.sh            <span class="cm"># LoRA training launcher (2× H100)</span>
+│   ├── train_full.sh            <span class="cm"># Full FT launcher (4× H100)</span>
+│   ├── evaluate.py              <span class="cm"># Offline eval (policy-mode + DreamGen)</span>
+│   └── infer_demo.py            <span class="cm"># Single-shot inference demo</span>
+└── notebooks/
+    └── quickstart.ipynb         <span class="cm"># Colab quickstart notebook</span></pre>
+
+  <!-- Key bugs fixed -->
+  <div class="section-head" style="margin-top:72px">
+    <div class="eyebrow">Reference</div>
+    <h2>Known issues &amp; fixes</h2>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="num">Bug 01</div>
+      <h4>cuDNN SDPA error</h4>
+      <p>Flash attention fails on some cuDNN builds during training. Fix: wrap the DiT forward pass with <code>torch.backends.cuda.sdp_kernel(enable_flash=False)</code> or set <code>TORCH_CUDNN_SDPA_ENABLED=0</code>.</p>
+    </div>
+    <div class="feature-card">
+      <div class="num">Bug 02</div>
+      <h4>PyTorch 2.1 LR scheduler strict mode</h4>
+      <p>Resuming from checkpoint with <code>strict=True</code> in the LR scheduler state_dict causes a key mismatch. Fix: pass <code>strict=False</code> to <code>scheduler.load_state_dict()</code>, or use PyTorch ≥ 2.2.</p>
+    </div>
+    <div class="feature-card">
+      <div class="num">Bug 03</div>
+      <h4>modality.json missing annotation.task</h4>
+      <p>The GEAR format requires an <code>annotation.task</code> entry in <code>modality.json</code> for the language conditioning to be correctly routed. The SO-101 patch adds this mapping; without it, the UMT5 text encoder receives zero embeddings.</p>
+    </div>
+    <div class="feature-card">
+      <div class="num">Bug 04</div>
+      <h4>dataloader_num_workers</h4>
+      <p>Setting <code>dataloader_num_workers</code> above 6 causes workers to be silently killed on RunPod H100 nodes. Recommended: <code>num_workers=4</code>.</p>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-grid" style="margin-top:56px">
+    <a class="cta-card" href="paper.html">
+      <span class="tag">Research paper</span>
+      <h4>Read the paper</h4>
+      <p>Full architecture, training objective, and results writeup with six PaperBanana figures.</p>
+      <span class="arrow">paper.html →</span>
+    </a>
+    <a class="cta-card" href="results.html">
+      <span class="tag">Evaluation receipts</span>
+      <h4>See the results</h4>
+      <p>Every video, plot, and metric from sanity tests through DreamGen rollouts.</p>
+      <span class="arrow">results.html →</span>
+    </a>
+    <a class="cta-card" href="contribute.html">
+      <span class="tag">Community</span>
+      <h4>Contribute data</h4>
+      <p>Record your own SO-101 scenes and help push the model's zero-shot generalisation.</p>
+      <span class="arrow">contribute.html →</span>
+    </a>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <div class="brand-block">
+    <h5>DreamZero-SO101</h5>
+    <p>An open world-action model for the low-cost SO-101 teleoperator arm.</p>
+    <p>Released under Apache 2.0 by <a href="https://vizuara.ai" target="_blank" rel="noopener">Vizuara</a>.</p>
+    <div class="meta">Build · 2026-04-09 · checkpoint 72K · LoRA rank 4</div>
+  </div>
+  <div>
+    <h5>Navigate</h5>
+    <a href="index.html">Home</a>
+    <a href="paper.html">Paper</a>
+    <a href="demo.html">Demo</a>
+    <a href="results.html">Results</a>
+    <a href="code.html">Code</a>
+    <a href="contribute.html">Contribute</a>
+  </div>
+  <div>
+    <h5>External</h5>
+    <a href="https://huggingface.co/Vizuara/dreamzero-so101-lora" target="_blank" rel="noopener">HF LoRA</a>
+    <a href="https://github.com/vizuara/dreamzero-so101" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/dreamzero0/dreamzero" target="_blank" rel="noopener">DreamZero</a>
+  </div>
+</footer>
+
+<script src="assets/js/nav.js"></script>
+</body>
+</html>

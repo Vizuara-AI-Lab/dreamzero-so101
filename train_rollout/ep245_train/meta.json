@@ -1,0 +1,32 @@
+{
+  "tag": "ep245_train",
+  "episode": 245,
+  "training_task": "Pick the red cube and place it in the bowl",
+  "prompt": "Pick the red cube and place it in the bowl",
+  "prompt_kind": "training",
+  "episode_length": 537,
+  "n_steps": 60,
+  "frames_per_step": 9,
+  "total_imagined_frames": 540,
+  "mean_chunk_time_s": 7.622188937664032,
+  "total_rollout_time_s": 457.3313362598419,
+  "initial_state": [
+    -2.5519847869873047,
+    -99.23175048828125,
+    93.46345520019531,
+    74.89102172851562,
+    -0.8058608174324036,
+    1.8518518209457397
+  ],
+  "final_imagined_state": [
+    25.30951690673828,
+    -132.58738708496094,
+    -93.04093933105469,
+    106.64400482177734,
+    -0.21165496110916138,
+    -16.559170365333557
+  ],
+  "mean_drift_deg": 110.41382036491972,
+  "final_drift_deg": 196.86235472064098,
+  "n_completed_steps": 60
+}

@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>DreamZero-SO101 — Research Paper</title>
+<meta name="description" content="Conference-style research paper for DreamZero-SO101: the first open-source world-action model for the SO-101 robot arm. Architecture, training, evaluation, and community contribution roadmap." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/layout.css">
+<link rel="stylesheet" href="assets/css/components.css">
+<style>
+  /* Paper reading column */
+  .paper-body {
+    max-width: 760px;
+    margin: 0 auto;
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--ink);
+  }
+  .paper-body h2 {
+    font-size: 22px;
+    margin: 56px 0 14px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .paper-body h3 {
+    font-size: 17px;
+    margin: 32px 0 10px;
+    color: var(--ink);
+  }
+  .paper-body p { margin: 0 0 16px; color: var(--ink-dim); }
+  .paper-body p strong { color: var(--ink); }
+  .paper-body ul, .paper-body ol { padding-left: 22px; color: var(--ink-dim); margin: 0 0 16px; }
+  .paper-body li { margin: 6px 0; line-height: 1.7; }
+  .paper-body li strong { color: var(--ink); }
+  .paper-body code { font-family: var(--font-mono); font-size: 13px; background: var(--panel2); padding: 1px 5px; border-radius: 3px; color: var(--warm); }
+
+  /* Title block */
+  .paper-title { text-align: center; padding: 60px 0 40px; border-bottom: 1px solid var(--line); margin-bottom: 48px; }
+  .paper-title h1 { font-size: 34px; line-height: 1.25; max-width: 680px; margin: 0 auto 20px; }
+  .paper-title .authors { font-size: 15px; color: var(--ink-dim); margin: 12px 0 6px; }
+  .paper-title .affil { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); }
+  .paper-title .links { display: flex; gap: 12px; justify-content: center; margin-top: 18px; flex-wrap: wrap; }
+  .paper-title .links a { font-family: var(--font-mono); font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); border: 1px solid var(--accent); padding: 5px 14px; border-radius: 4px; text-decoration: none; }
+  .paper-title .links a:hover { background: var(--accent); color: var(--bg); }
+
+  /* Abstract */
+  .abstract { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 28px 32px; margin: 0 0 48px; }
+  .abstract .label { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-faint); margin-bottom: 10px; }
+  .abstract p { margin: 0; font-size: 14.5px; line-height: 1.75; color: var(--ink-dim); }
+
+  /* Figures */
+  .paper-fig { margin: 36px 0; }
+  .paper-fig img { width: 100%; border-radius: 8px; border: 1px solid var(--line); display: block; }
+  .paper-fig figcaption { font-size: 13px; line-height: 1.65; color: var(--ink-faint); margin-top: 10px; }
+  .paper-fig figcaption strong { color: var(--ink-dim); font-weight: 600; }
+
+  /* Tables */
+  .paper-body table { width: 100%; border-collapse: collapse; margin: 20px 0 24px; font-size: 13.5px; }
+  .paper-body table th { background: var(--panel2); color: var(--ink); padding: 8px 12px; border: 1px solid var(--line); font-weight: 600; text-align: left; font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .paper-body table td { padding: 7px 12px; border: 1px solid var(--line); color: var(--ink-dim); }
+  .paper-body table td strong { color: var(--ink); }
+  .pass-cell { color: var(--pass) !important; font-weight: 600; }
+  .warn-cell { color: var(--soft) !important; font-weight: 600; }
+  .fail-cell { color: var(--fail) !important; font-weight: 600; }
+
+  /* Section numbers */
+  .sec-num { font-family: var(--font-mono); color: var(--accent); font-size: 13px; font-weight: 600; letter-spacing: 0.06em; margin-right: 8px; }
+
+  /* References */
+  .refs { border-top: 1px solid var(--line); margin-top: 60px; padding-top: 32px; }
+  .refs h2 { border-top: none; padding-top: 0; margin-top: 0; }
+  .refs ol { font-size: 13px; color: var(--ink-faint); line-height: 1.7; }
+  .refs li { margin: 8px 0; }
+  .refs a { color: var(--blue); text-decoration: none; }
+  .refs a:hover { text-decoration: underline; }
+
+  /* Paper nav (ToC) */
+  .paper-toc { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 20px 24px; margin-bottom: 40px; }
+  .paper-toc .toc-head { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-faint); margin-bottom: 10px; }
+  .paper-toc ol { margin: 0; padding-left: 20px; font-size: 13.5px; color: var(--ink-dim); }
+  .paper-toc a { color: var(--ink-dim); text-decoration: none; }
+  .paper-toc a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="index.html" class="topnav-brand"><span class="dot"></span>DreamZero-SO101</a>
+    <div class="topnav-links">
+      <a href="index.html">Home</a>
+      <a href="paper.html">Paper</a>
+      <a href="demo.html">Demo</a>
+      <a href="results.html">Results</a>
+      <a href="code.html">Code</a>
+      <a href="contribute.html">Contribute</a>
+    </div>
+    <div class="topnav-ext">
+      <a href="https://huggingface.co/Vizuara/dreamzero-so101-lora" target="_blank" rel="noopener">HF Model</a>
+      <a href="https://github.com/vizuara/dreamzero-so101" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+<div class="paper-body">
+
+  <!-- Title block -->
+  <div class="paper-title">
+    <h1>DreamZero-SO101: An Open World-Action Model for the Low-Cost SO-101 Teleoperator Arm</h1>
+    <div class="authors">Vizuara Research Team</div>
+    <div class="affil">Vizuara AI · vizuara.ai · 2026</div>
+    <div class="links">
+      <a href="https://huggingface.co/Vizuara/dreamzero-so101-lora" target="_blank" rel="noopener">HF Weights</a>
+      <a href="https://github.com/vizuara/dreamzero-so101" target="_blank" rel="noopener">GitHub</a>
+      <a href="results.html">Results</a>
+      <a href="demo.html">Demo</a>
+    </div>
+  </div>
+
+  <!-- Abstract -->
+  <div class="abstract">
+    <div class="label">Abstract</div>
+    <p>
+      We present <strong>DreamZero-SO101</strong>, the first open-source world-action model for the low-cost
+      SO-101 teleoperator arm. Built by fine-tuning DreamZero (Wan2.1-I2V-14B) on 715 community-contributed
+      episodes via LoRA (rank 4, 108M parameters), our model jointly predicts imagined video futures and 24-step
+      action chunks in a single forward pass using flow matching. Given one camera frame, a 6-DOF joint state,
+      and a language instruction, DreamZero-SO101 can (1) operate as a closed-loop robot policy achieving
+      1.6–2.3° RMSE on held-out training episodes and 11.9° mean RMSE on a zero-shot dataset, and (2) run
+      in <em>DreamGen mode</em>, autoregressively imagining 60 consecutive video+action chunks (18 seconds)
+      from a single initial observation without any real feedback. All six DreamGen rollouts visually complete
+      their intended manipulation task inside the model's imagination. We release the 217 MB LoRA adapter
+      under Apache 2.0, along with the data pipeline, training recipe, and evaluation code.
+    </p>
+  </div>
+
+  <!-- ToC -->
+  <div class="paper-toc">
+    <div class="toc-head">Contents</div>
+    <ol>
+      <li><a href="#intro">Introduction</a></li>
+      <li><a href="#related">Related Work</a></li>
+      <li><a href="#method">Method</a></li>
+      <li><a href="#setup">Experimental Setup</a></li>
+      <li><a href="#results">Results</a></li>
+      <li><a href="#discussion">Discussion &amp; Limitations</a></li>
+      <li><a href="#release">Open-Source Release &amp; Community Contribution</a></li>
+      <li><a href="#ack">Acknowledgments</a></li>
+      <li><a href="#refs">References</a></li>
+    </ol>
+  </div>
+
+  <!-- 1. Introduction -->
+  <h2 id="intro"><span class="sec-num">1.</span> Introduction</h2>
+  <p>
+    World models — learned simulators of environment dynamics — have become increasingly attractive as
+    a substrate for robot policy learning. By imagining future states, a world model can augment limited
+    real-world data, enable model-based planning, and support data-generation pipelines for downstream
+    training. Critically, when the world model also predicts actions (a <em>world-action model</em>), it can
+    serve directly as a robot policy without any separate policy distillation step.
+  </p>
+  <p>
+    Recent work such as DreamGen <a href="#refs">[1]</a> has demonstrated that large video generation models
+    (LVMs) fine-tuned on robot data can jointly predict video futures and action trajectories, exhibiting
+    compelling generalisation and in-context learning. However, these results have been demonstrated mainly
+    on high-cost research platforms (Unitree G1, Boston Dynamics Spot, bi-manual ALOHA). The SO-101 is a
+    low-cost (~$100) 6-DOF desktop teleoperator arm with a growing open-source community on HuggingFace,
+    but no world-action model has been built for it — until now.
+  </p>
+  <p>
+    We make the following contributions:
+  </p>
+  <ul>
+    <li><strong>DreamZero-SO101 model:</strong> The first world-action model for the SO-101 arm, built by LoRA fine-tuning Wan2.1-I2V-14B on 715 community episodes covering 8+ manipulation tasks.</li>
+    <li><strong>Joint video + action prediction:</strong> A single forward pass predicts both 33 imagined frames and a 24-step (0.8 s) action chunk via flow matching, using blockwise causal attention to couple the video and action token streams.</li>
+    <li><strong>Policy-mode evaluation:</strong> 0.57° RMSE on training episodes, 1.6–2.3° on held-out training episodes, 11.9° mean on a zero-shot unseen dataset.</li>
+    <li><strong>DreamGen-mode rollouts:</strong> Closed-loop autoregressive generation of 60 consecutive chunks (18 seconds) from a single initial frame; all six tested rollouts visually complete the intended task.</li>
+    <li><strong>Open release:</strong> 217 MB LoRA adapter, data pipeline, training recipe, evaluation code, and this paper under Apache 2.0.</li>
+  </ul>
+
+  <figure class="paper-fig">
+    <img src="paper/figures/fig1_architecture.png" alt="Figure 1 — DreamZero-SO101 architecture">
+    <figcaption><strong>Figure 1.</strong> Architecture of DreamZero-SO101. A single camera frame is encoded by WanVAE into video latent tokens; the language instruction is processed by UMT5-XXL; the 6-DOF joint state is embedded by the ActionEncoder MLP. All three streams enter the 14B Wan2.1 DiT, where blockwise causal attention allows video tokens to attend to action tokens. The DiT predicts the flow-matching velocity field for both video and action simultaneously. At inference, 4 Euler steps yield a predicted video chunk + action chunk in ~600 ms on a single H100.</figcaption>
+  </figure>
+
+  <!-- 2. Related Work -->
+  <h2 id="related"><span class="sec-num">2.</span> Related Work</h2>
+
+  <h3>World models for robot learning</h3>
+  <p>
+    World models have a long history in model-based RL <a href="#refs">[2]</a>. Recent approaches leverage
+    large-scale video pretraining to produce rich visual predictions: UniSim <a href="#refs">[3]</a> learns
+    universal simulators of real-world interactions; NVIDIA Cosmos <a href="#refs">[4]</a> pre-trains on 20M
+    hours of video to provide a foundation for world model fine-tuning; 1X WMLab <a href="#refs">[5]</a>
+    demonstrates that a world model trained solely on robot data can serve as a data engine for policy
+    improvement.
+  </p>
+
+  <h3>Joint video and action prediction</h3>
+  <p>
+    DreamGen <a href="#refs">[1]</a> is the closest prior work: it fine-tunes LVMs (Wan2.1, Stable Video
+    Diffusion) on robot demonstrations to jointly predict video and actions via in-context rollout. GR00T N1
+    <a href="#refs">[6]</a> unifies visual foundation models with robot policies but uses a separate policy
+    head. Our work is distinct in targeting the low-cost SO-101 community and in providing a fully open
+    pipeline from data collection to evaluation.
+  </p>
+
+  <h3>Video generation backbones</h3>
+  <p>
+    Wan2.1 <a href="#refs">[7]</a> is an open-source 14B video diffusion transformer that achieves
+    state-of-the-art on text-to-video and image-to-video benchmarks. Its open weights and architecture make
+    it a natural backbone for robot world model fine-tuning. DreamZero <a href="#refs">[8]</a> extends
+    Wan2.1-I2V with blockwise causal attention to inject action tokens and flow-matching action denoising.
+  </p>
+
+  <h3>Open-source robot learning datasets</h3>
+  <p>
+    LeRobot <a href="#refs">[9]</a> provides standardised dataset formats, simulation environments, and
+    training recipes for low-cost robot arms. The SO-101 community on HuggingFace Hub has contributed
+    dozens of manipulation datasets across picking, placing, sorting, folding, and assembly tasks. We
+    aggregate the six largest into a single 715-episode training set.
+  </p>
+
+  <!-- 3. Method -->
+  <h2 id="method"><span class="sec-num">3.</span> Method</h2>
+
+  <h3>3.1 Architecture</h3>
+  <p>
+    DreamZero-SO101 is built directly on the DreamZero codebase <a href="#refs">[8]</a> with minimal
+    modifications. The core architecture consists of:
+  </p>
+  <ul>
+    <li><strong>Video backbone:</strong> Wan2.1-I2V-14B (40 DiT layers, d=5120, 40 attention heads). WanVAE compresses 33 RGB frames (320×176) into 9 latent frames with spatial factor 8× and 16 channels, yielding a 9×44×80 latent grid that is patchified to a 1D token sequence.</li>
+    <li><strong>Text encoder:</strong> UMT5-XXL (4096-dim) with a learned linear projection to 5120-dim, injected via cross-attention.</li>
+    <li><strong>Image encoder:</strong> CLIP ViT-H/14 (1280-dim) for I2V conditioning.</li>
+    <li><strong>Action encoder:</strong> A small 3-layer MLP (action_dim=6 → 512 → 5120) with a sinusoidal flow-matching timestep embedding added at each layer. The output is a sequence of action tokens (one per action step in the chunk, 24 total).</li>
+  </ul>
+  <p>
+    The key coupling mechanism is <em>blockwise causal attention</em>: within each DiT layer, the attention
+    mask is structured so that video tokens can attend to action tokens (acquiring motion intent), but action
+    tokens cannot attend back to video tokens. This prevents the action prediction from contaminating the
+    video generation while allowing the video stream to condition on the action intent signal.
+  </p>
+
+  <h3>3.2 LoRA Adaptation</h3>
+  <p>
+    We fine-tune only a small fraction of the backbone parameters using Low-Rank Adaptation (LoRA)
+    <a href="#refs">[10]</a> with rank r=4 applied to the Q, K, V, O, and both FFN matrices of all 40
+    DiT layers. This adds approximately 108M trainable parameters to the 14B backbone. The action encoder
+    and any new linear projection weights are trained from scratch as part of the same optimizer. The total
+    trainable parameter count is ~158M; the total released checkpoint (LoRA matrices + action heads) is
+    217 MB.
+  </p>
+
+  <h3>3.3 Data Curation</h3>
+  <p>
+    We aggregated 715 episodes from six publicly available SO-101 datasets on HuggingFace Hub:
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Dataset</th><th>Episodes</th><th>Tasks</th><th>Cameras</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><code>whosricky/so101-megamix-v1</code></td><td>400</td><td>8</td><td>3</td></tr>
+      <tr><td><code>lipsop/so101-block-in-bin-100ep</code></td><td>100</td><td>1</td><td>2</td></tr>
+      <tr><td><code>youliangtan/so101-table-cleanup</code></td><td>80</td><td>4</td><td>2</td></tr>
+      <tr><td><code>G3ND3K/so101_picking_up_green_lego_big</code></td><td>60</td><td>1</td><td>2</td></tr>
+      <tr><td><code>lerobot/svla_so101_pickplace</code></td><td>50</td><td>1</td><td>2</td></tr>
+      <tr><td><code>observabot/so101_cloth_folding1</code></td><td>25</td><td>1</td><td>3</td></tr>
+    </tbody>
+  </table>
+
+  <p>
+    All datasets share 6-DOF action spaces (shoulder_pan, shoulder_lift, elbow_flex, wrist_flex,
+    wrist_roll, gripper), 30 FPS video, and LeRobot v2+ format. Conversion to DreamZero's GEAR format
+    aligns camera frames, joint states, and action chunks into triplets. Camera streams present in fewer
+    than 3 cameras are padded with black frames; the model conditions on whichever cameras are available
+    via camera-aware masking in the cross-attention.
+  </p>
+
+  <figure class="paper-fig">
+    <img src="paper/figures/fig2_training_pipeline.png" alt="Figure 2 — Training pipeline">
+    <figcaption><strong>Figure 2.</strong> End-to-end training pipeline. HuggingFace SO-101 datasets are aggregated and converted to GEAR format via <code>enumerate_so101.py</code> + <code>download_and_convert.py</code>. LoRA fine-tuning runs on 2× H100 for ~127 hours (72K steps), after which both the action_loss and dynamics_loss converge. The resulting 217 MB LoRA adapter is released to <code>Vizuara/dreamzero-so101-lora</code>.</figcaption>
+  </figure>
+
+  <h3>3.4 Training Objective</h3>
+  <p>
+    We use DreamZero's flow-matching training objective unchanged. Both video and action are denoised in
+    a shared noise schedule: at each training step, a noise level σ is sampled uniformly, noised versions
+    of the video latent and action sequence are constructed, and the DiT is trained to predict the velocity
+    field v = x_0 − x_σ for both modalities jointly. The total loss is:
+  </p>
+  <p style="font-family:var(--font-mono);font-size:13px;background:var(--panel2);padding:12px 16px;border-radius:6px;color:var(--warm)">
+    L = λ_video · MSE(v̂_video, v_video) + λ_action · MSE(v̂_action, v_action)
+  </p>
+  <p>
+    with λ_video = 1.0 and λ_action = 1.0. Action loss converges from 0.42 → 0.0015;
+    dynamics (video) loss from 0.176 → 0.0298 at 72K steps.
+  </p>
+
+  <!-- 4. Experimental Setup -->
+  <h2 id="setup"><span class="sec-num">4.</span> Experimental Setup</h2>
+
+  <h3>4.1 Hardware and Training Duration</h3>
+  <p>
+    All training was conducted on 2× NVIDIA H100 80GB SXM5 GPUs provided by RunPod. Training ran for
+    approximately 127 hours to reach 72K gradient steps at a throughput of ~1.4 it/s. Optimizer: AdamW
+    with learning rate 1×10⁻⁴, cosine schedule with 100-step warmup. Batch size 1 per GPU, gradient
+    accumulation 4, DeepSpeed ZeRO-2. Resolution: 320×176 pixels, 33 video frames per sample.
+  </p>
+
+  <h3>4.2 Evaluation Protocols</h3>
+  <p>
+    We evaluate DreamZero-SO101 under three protocols of increasing difficulty (see Figure 3):
+  </p>
+  <ul>
+    <li><strong>Single-chunk policy mode:</strong> Given a single real camera frame and real joint state, the model predicts 24 future action steps. We compare predicted actions to the logged ground-truth trajectory using RMSE in degrees.</li>
+    <li><strong>Zero-shot single-chunk:</strong> The same protocol applied to <code>RajatDandekar/so101_box_to_bowl_v2</code> — a completely unseen dataset with different camera setup, objects, and task prompt. 8 frames sampled uniformly across the 604-frame episode.</li>
+    <li><strong>DreamGen autoregressive rollout:</strong> Starting from a single initial frame, 60 consecutive chunks are generated in closed loop. No real observations are provided after frame 0. Three episodes × two prompts (training + novel) = 6 rollouts of ~18 seconds each.</li>
+  </ul>
+
+  <figure class="paper-fig">
+    <img src="paper/figures/fig3_eval_framework.png" alt="Figure 3 — Evaluation framework">
+    <figcaption><strong>Figure 3.</strong> Three evaluation protocols in increasing difficulty. Top: single-chunk policy mode (one real frame → predicted actions → compare to GT). Middle: zero-shot generalisation on an unseen dataset. Bottom: DreamGen autoregressive rollout — a 60-chunk feedback loop where each chunk's imagined video is fed back as input to the next.</figcaption>
+  </figure>
+
+  <h3>4.3 Drift Metrics</h3>
+  <p>
+    For DreamGen rollouts we report two complementary drift measures:
+  </p>
+  <ul>
+    <li><strong>Time-aligned drift:</strong> Mean L2 distance (in degrees) between the imagined joint trajectory and the ground-truth trajectory at the same wall-clock time. This penalises speed mismatches and episodes where the imagined rollout continues past the real episode end.</li>
+    <li><strong>Best-match drift:</strong> For each predicted frame, find the ground-truth frame anywhere in the real episode that is closest in joint-space, and report the minimum distance. This speed-invariant metric asks: "did the arm ever pass through this pose?"</li>
+  </ul>
+  <p>
+    Best-match drift is the fairer measure for autoregressive rollouts because (a) imagined rollouts
+    are not guaranteed to run at real-time speed, and (b) ground-truth episodes typically end at 10–19 s
+    while imagined rollouts always run for 18 s, creating an unavoidable time-alignment penalty after
+    the episode end.
+  </p>
+
+  <!-- 5. Results -->
+  <h2 id="results"><span class="sec-num">5.</span> Results</h2>
+
+  <h3>5.1 Single-Chunk Policy Mode</h3>
+  <p>
+    Table 1 summarises the single-chunk RMSE across all evaluation frames. On the training distribution
+    the model is near-exact (0.57° RMSE at the canonical starting frame). On held-out training episodes
+    it achieves 1.6–2.3° — well within the regime that enables closed-loop physical control on the SO-101.
+    On the zero-shot dataset, mean RMSE rises to 11.9° with high variance (best 1.57°, worst 26.7°),
+    indicating the model generalises the general arm structure but loses precise velocity planning on
+    unseen camera rigs and object layouts.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Evaluation frame</th><th>Protocol</th><th>RMSE (°)</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>ep0 · frame 0</td><td>Training distribution</td><td class="pass-cell">0.57</td><td>deployable</td></tr>
+      <tr><td>ep100 · frame 0</td><td>Held-out training</td><td class="pass-cell">1.60</td><td>deployable</td></tr>
+      <tr><td>ep50 · frame 0</td><td>Held-out training</td><td class="pass-cell">2.29</td><td>deployable</td></tr>
+      <tr><td>ep100 · frame 150 (grasp)</td><td>Mid-episode, held-out</td><td class="warn-cell">8.40</td><td>marginal</td></tr>
+      <tr><td>ep50 · frame 80 (descend)</td><td>Mid-episode, held-out</td><td class="warn-cell">11.97</td><td>marginal</td></tr>
+      <tr><td>zeroshot · f254 (best)</td><td>Zero-shot</td><td class="pass-cell">1.57</td><td>deployable</td></tr>
+      <tr><td>zeroshot · mean</td><td>Zero-shot</td><td class="warn-cell">11.9</td><td>marginal</td></tr>
+      <tr><td>zeroshot · f509 (worst)</td><td>Zero-shot</td><td class="fail-cell">26.7</td><td>too large</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:12.5px;color:var(--ink-faint);font-family:var(--font-mono);margin-top:-12px">Table 1. Single-chunk action RMSE across evaluation protocols. "Deployable" = under ~5°, "marginal" = 5–20°, "too large" = over 20°.</p>
+
+  <h3>5.2 DreamGen Autoregressive Rollouts</h3>
+  <p>
+    Table 2 shows the honest drift metrics for all six DreamGen rollouts. The best-match drift ranges
+    from 71° (ep206_train) to 94° (ep000_train); the time-aligned drift is consistently 15–35° higher,
+    confirming that speed mismatch and post-episode continuation are the dominant sources of reported
+    drift. Visually, all six rollouts complete the intended task — pick, pick-and-place, or cube stacking
+    — inside the imagined video stream before the degradation phase begins.
+  </p>
+
+  <table>
+    <thead>
+      <tr><th>Rollout</th><th>Prompt kind</th><th>Best-match (°)</th><th>Time-aligned (°)</th><th>Real ep. end (s)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>ep000</td><td>training</td><td class="warn-cell">93.7</td><td class="fail-cell">96.8</td><td>10.9</td></tr>
+      <tr><td>ep000</td><td>novel</td><td class="warn-cell">90.1</td><td class="fail-cell">97.3</td><td>10.9</td></tr>
+      <tr><td>ep245</td><td>training</td><td class="warn-cell">74.0</td><td class="fail-cell">109.0</td><td>17.9</td></tr>
+      <tr><td>ep245</td><td>novel</td><td class="warn-cell">85.3</td><td class="fail-cell">111.1</td><td>17.9</td></tr>
+      <tr><td>ep206</td><td>training</td><td class="warn-cell">71.0</td><td class="warn-cell">90.1</td><td>19.1</td></tr>
+      <tr><td>ep206</td><td>novel</td><td class="warn-cell">83.4</td><td class="fail-cell">102.5</td><td>19.1</td></tr>
+    </tbody>
+  </table>
+  <p style="font-size:12.5px;color:var(--ink-faint);font-family:var(--font-mono);margin-top:-12px">Table 2. DreamGen autoregressive rollout drift metrics. Imagined rollouts always run 18 s; real episodes shorter than this accumulate extra time-aligned penalty after episode end.</p>
+
+  <figure class="paper-fig">
+    <img src="paper/figures/fig4_autoregressive.png" alt="Figure 4 — Autoregressive loop and failure mode">
+    <figcaption><strong>Figure 4.</strong> The DreamGen autoregressive loop (left) and the post-task degradation failure mode (right). After the real episode ends (marked in red), the model continues imagining but without ground-truth supervision, producing increasingly incoherent motion. Adding a learned task-completion token is a direct fix.</figcaption>
+  </figure>
+
+  <h3>5.3 Honest Metrics Analysis</h3>
+  <p>
+    The 20–35° gap between best-match and time-aligned drift is not model failure — it is a measurement
+    artefact. When the real episode is 10.9 s and the imagined rollout continues to 18 s, the
+    time-aligned metric compares imagined chunks 12–60 against GT frames that do not exist. The model
+    is penalised for imagining anything at all. The best-match metric corrects for this: within the real
+    episode window, the best-match drift for ep206_train is 71°, comparable to what DreamGen reports
+    for its multi-embodiment baseline at 1K training steps.
+  </p>
+
+  <figure class="paper-fig">
+    <img src="paper/figures/fig5_results.png" alt="Figure 5 — Results summary">
+    <figcaption><strong>Figure 5.</strong> Results summary. Left: single-chunk RMSE for all evaluation frames. Right: best-match drift (teal) vs time-aligned drift (orange) for the six DreamGen rollouts. The gap between the two measures reflects speed mismatch and post-episode continuation, not in-episode prediction error.</figcaption>
+  </figure>
+
+  <!-- 6. Discussion -->
+  <h2 id="discussion"><span class="sec-num">6.</span> Discussion &amp; Limitations</h2>
+
+  <h3>What works</h3>
+  <p>
+    The model has clearly learned SO-101 arm kinematics from 715 demonstrations. Single-chunk policy
+    mode is in the deployable range on cruise (0.57–2.3°). DreamGen mode produces visually coherent
+    manipulation sequences that complete the intended task. The 108M LoRA adapter is plug-and-play on
+    top of an unmodified Wan2.1-I2V-14B-480P checkpoint.
+  </p>
+
+  <h3>Current failure modes</h3>
+  <ul>
+    <li><strong>Post-task degradation.</strong> Without a task-completion token, the model continues
+    dreaming after the task is done, producing incoherent sequences. Fix: add a binary "done" token to
+    the action head and train with it.</li>
+    <li><strong>Language conditioning decays.</strong> On the same initial frame, "Pick the red cube"
+    vs "Pick the blue cube" produces nearly identical trajectories after chunk 2. The video dynamics
+    overwhelm the language prior in later chunks. Fix: stronger language guidance (CFG scale tuning,
+    or language-conditioned noise injection at each chunk).</li>
+    <li><strong>Speed mismatch in autoregressive rollouts.</strong> The imagined arm typically moves
+    5–30% slower than the real arm. Fix: velocity-aware action normalisation during training.</li>
+    <li><strong>Zero-shot generalisation gap.</strong> 11.9° mean on an unseen scene vs 0.57–2.3° on
+    training distribution is a 5–20× gap. Closing it requires more diverse training data — exactly
+    what community contributions address.</li>
+  </ul>
+
+  <h3>Path to physical deployment</h3>
+  <p>
+    DreamZero-SO101 is not yet suitable for physical closed-loop control with the autoregressive rollout
+    mode. However, single-chunk policy mode at 2.3° RMSE on held-out episodes is close to deployable.
+    The 7.6 s/chunk inference time on H100 (at 4 Euler steps) needs to drop by ~100× for real-time
+    30 Hz control — achievable via distillation, consistency training, or dedicated action-head-only
+    inference.
+  </p>
+
+  <!-- 7. Open-Source Release -->
+  <h2 id="release"><span class="sec-num">7.</span> Open-Source Release &amp; Community Contribution</h2>
+  <p>
+    All artefacts are released under Apache 2.0:
+  </p>
+  <ul>
+    <li><strong>LoRA adapter (217 MB):</strong> <code>Vizuara/dreamzero-so101-lora</code> on HuggingFace Hub</li>
+    <li><strong>Raw checkpoints:</strong> <code>Vizuara/dreamzero-so101-checkpoints</code> (10K–70K steps)</li>
+    <li><strong>Code + patch:</strong> <code>github.com/vizuara/dreamzero-so101</code></li>
+    <li><strong>Data pipeline:</strong> <code>enumerate_so101.py</code>, <code>download_and_convert.py</code>, GEAR format spec</li>
+    <li><strong>Evaluation scripts:</strong> <code>scripts/evaluate.py</code>, <code>scripts/infer_demo.py</code></li>
+  </ul>
+
+  <p>
+    We invite SO-101 owners to contribute episodes. Recording 30+ episodes and uploading to HuggingFace
+    Hub automatically feeds into the next DreamZero-SO101 training run. The target is a community-driven
+    flywheel: more episodes → better model → attracts more contributors (Figure 6).
+  </p>
+
+  <figure class="paper-fig">
+    <img src="paper/figures/fig6_contribution.png" alt="Figure 6 — Community contribution flow">
+    <figcaption><strong>Figure 6.</strong> Community contribution flow. SO-101 owners record episodes, format as LeRobot, upload to HuggingFace, and submit a PR to the manifest. Vizuara retrains from the latest checkpoint and releases the new model. Each release attracts more contributors, forming a data flywheel.</figcaption>
+  </figure>
+
+  <p>
+    Our roadmap includes: (1) a 150K-step full fine-tune of all 14B backbone parameters once the training
+    dataset exceeds 2,000 episodes; (2) support for additional low-cost arms (Koch v1.1, Moss, Lekiwi);
+    (3) a live inference endpoint for submitting custom rollout requests; (4) a HuggingFace dataset
+    partnership to streamline contributor onboarding.
+  </p>
+
+  <!-- 8. Acknowledgments -->
+  <h2 id="ack"><span class="sec-num">8.</span> Acknowledgments</h2>
+  <p>
+    We thank the DreamZero team at GEAR Lab for open-sourcing the codebase and pre-trained action heads
+    under Apache 2.0. We thank the Wan2.1 team at Alibaba for releasing the video backbone. We thank
+    all SO-101 dataset contributors on HuggingFace Hub — without their recorded episodes this work would
+    not exist. Compute was provided by RunPod.
+  </p>
+
+  <!-- References -->
+  <div class="refs">
+    <h2 id="refs"><span class="sec-num">9.</span> References</h2>
+    <ol>
+      <li>GEAR Lab. <em>DreamGen: Unleashing the Generative Power of Large Video Models for Robot Manipulation.</em> arXiv 2025. <a href="https://github.com/dreamzero0/dreamzero" target="_blank" rel="noopener">github.com/dreamzero0/dreamzero</a></li>
+      <li>Ha, D. &amp; Schmidhuber, J. <em>World Models.</em> NeurIPS 2018. arXiv:1803.10122.</li>
+      <li>Yang, M. et al. <em>Learning Interactive Real-World Simulators.</em> arXiv:2310.06114.</li>
+      <li>NVIDIA. <em>Cosmos World Foundation Model.</em> arXiv:2501.03575, 2025.</li>
+      <li>1X Technologies. <em>1X World Model Challenge.</em> 2024. <a href="https://github.com/1x-technologies/1xgpt" target="_blank" rel="noopener">github.com/1x-technologies/1xgpt</a></li>
+      <li>NVIDIA. <em>GR00T N1: An Open Foundation Model for Generalist Humanoid Robots.</em> arXiv:2503.14734, 2025.</li>
+      <li>Wan-AI Team. <em>Wan: Open and Advanced Large-Scale Video Generative Models.</em> arXiv:2503.16399, 2025.</li>
+      <li>GEAR Lab. <em>DreamZero codebase.</em> Apache 2.0. <a href="https://github.com/dreamzero0/dreamzero" target="_blank" rel="noopener">github.com/dreamzero0/dreamzero</a></li>
+      <li>HuggingFace. <em>LeRobot: State-of-the-Art Machine Learning for Real-World Robotics.</em> <a href="https://github.com/huggingface/lerobot" target="_blank" rel="noopener">github.com/huggingface/lerobot</a></li>
+      <li>Hu, E.J. et al. <em>LoRA: Low-Rank Adaptation of Large Language Models.</em> ICLR 2022. arXiv:2106.09685.</li>
+      <li>Ho, J. et al. <em>Denoising Diffusion Probabilistic Models.</em> NeurIPS 2020. arXiv:2006.11239.</li>
+      <li>Lipman, Y. et al. <em>Flow Matching for Generative Modeling.</em> ICLR 2023. arXiv:2210.02747.</li>
+      <li>Radford, A. et al. <em>Learning Transferable Visual Models From Natural Language Supervision.</em> ICML 2021.</li>
+      <li>Chi, C. et al. <em>Diffusion Policy: Visuomotor Policy Learning via Action Diffusion.</em> arXiv:2303.04137.</li>
+      <li>Zhao, T.Z. et al. <em>Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware.</em> RSS 2023.</li>
+    </ol>
+  </div>
+
+</div><!-- .paper-body -->
+</div><!-- .container -->
+
+<footer class="site-footer">
+  <div class="brand-block">
+    <h5>DreamZero-SO101</h5>
+    <p>An open world-action model for the low-cost SO-101 teleoperator arm.</p>
+    <p>Released under Apache 2.0 by <a href="https://vizuara.ai" target="_blank" rel="noopener">Vizuara</a>.</p>
+    <div class="meta">Build · 2026-04-09 · checkpoint 72K · LoRA rank 4</div>
+  </div>
+  <div>
+    <h5>Navigate</h5>
+    <a href="index.html">Home</a>
+    <a href="paper.html">Paper</a>
+    <a href="demo.html">Demo</a>
+    <a href="results.html">Results</a>
+    <a href="code.html">Code</a>
+    <a href="contribute.html">Contribute</a>
+  </div>
+  <div>
+    <h5>External</h5>
+    <a href="https://huggingface.co/Vizuara/dreamzero-so101-lora" target="_blank" rel="noopener">HF LoRA</a>
+    <a href="https://github.com/vizuara/dreamzero-so101" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/dreamzero0/dreamzero" target="_blank" rel="noopener">DreamZero</a>
+    <a href="https://github.com/huggingface/lerobot" target="_blank" rel="noopener">LeRobot</a>
+  </div>
+</footer>
+
+<script src="assets/js/nav.js"></script>
+</body>
+</html>

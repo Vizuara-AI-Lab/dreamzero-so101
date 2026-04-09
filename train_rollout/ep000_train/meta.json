@@ -1,0 +1,32 @@
+{
+  "tag": "ep000_train",
+  "episode": 0,
+  "training_task": "Pick the red cube",
+  "prompt": "Pick the red cube",
+  "prompt_kind": "training",
+  "episode_length": 328,
+  "n_steps": 60,
+  "frames_per_step": 9,
+  "total_imagined_frames": 540,
+  "mean_chunk_time_s": 7.603848469257355,
+  "total_rollout_time_s": 456.2309081554413,
+  "initial_state": [
+    -0.47258979082107544,
+    -99.23175048828125,
+    95.36994934082031,
+    67.74193572998047,
+    -1.6361416578292847,
+    1.9890260696411133
+  ],
+  "final_imagined_state": [
+    -10.775461494922638,
+    -94.7262134552002,
+    -98.0869312286377,
+    48.51753616333008,
+    11.73087227344513,
+    -110.59193897247314
+  ],
+  "mean_drift_deg": 137.6379550432862,
+  "final_drift_deg": 231.69740594183207,
+  "n_completed_steps": 60
+}

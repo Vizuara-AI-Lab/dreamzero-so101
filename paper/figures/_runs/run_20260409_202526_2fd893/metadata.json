@@ -1,0 +1,25 @@
+{
+  "run_id": "run_20260409_202526_2fd893",
+  "timestamp": "2026-04-09T20:35:27.059658",
+  "vlm_provider": "gemini",
+  "vlm_model": "gemini-2.0-flash",
+  "image_provider": "google_imagen",
+  "image_model": "gemini-3-pro-image-preview",
+  "refinement_iterations": 2,
+  "seed": null,
+  "config_snapshot": {
+    "vlm_provider": "gemini",
+    "vlm_model": "gemini-2.0-flash",
+    "image_provider": "google_imagen",
+    "image_model": "gemini-3-pro-image-preview",
+    "num_retrieval_examples": 10,
+    "refinement_iterations": 2,
+    "output_resolution": "2k",
+    "reference_set_path": "data/reference_sets",
+    "guidelines_path": "data/guidelines",
+    "output_dir": "/Users/raj/Desktop/Robotics Research/dreamzero-so101/wam_results/paper/figures/_runs",
+    "save_iterations": true,
+    "openrouter_api_key": null,
+    "skip_ssl_verification": false
+  }
+}
