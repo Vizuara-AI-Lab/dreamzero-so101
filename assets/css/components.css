@@ -1156,12 +1156,11 @@ table.data-table td.num { color: var(--teal); }
 /* ====== Hero carousel refinement ====== */
 .hero-carousel {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 14px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
   margin-top: 18px;
 }
-@media (max-width: 1100px) { .hero-carousel { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 700px) { .hero-carousel { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 900px) { .hero-carousel { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 480px) { .hero-carousel { grid-template-columns: 1fr; } }
 .hero-clip {
   background: #fff;
@@ -1185,25 +1184,25 @@ table.data-table td.num { color: var(--teal); }
   background: #0d0c0a;
 }
 .hero-clip .meta {
-  padding: 10px 12px 12px;
+  padding: 14px 18px 16px;
   border-top: 1px solid var(--line);
 }
 .hero-clip .meta .ep {
   font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: 0.12em;
+  font-size: 10px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
   font-weight: 600;
 }
 .hero-clip .meta .prompt {
   font-family: var(--font-serif);
-  font-size: 12px;
+  font-size: 14.5px;
   font-weight: 500;
   color: var(--ink);
   font-style: italic;
-  margin-top: 4px;
-  line-height: 1.35;
+  margin-top: 6px;
+  line-height: 1.4;
 }
 .hero-clip .meta .src-tag {
   font-family: var(--font-mono);
