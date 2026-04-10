@@ -100,40 +100,50 @@
 
   <section class="section-head" style="margin-top:64px">
     <div class="eyebrow">How to read the gallery</div>
-    <h2>Six capabilities on display</h2>
-    <p class="lead" style="max-width:780px;margin:16px auto 0">Use the filter chips above the gallery to isolate one capability at a time, or browse all 25 rollouts together.</p>
+    <h2>Eight capabilities on display</h2>
+    <p class="lead" style="max-width:780px;margin:16px auto 0">Use the filter chips above the gallery to isolate one capability at a time, or browse all 35 rollouts together.</p>
   </section>
 
-  <div class="feature-grid" style="grid-template-columns:repeat(3,1fr)">
+  <div class="feature-grid" style="grid-template-columns:repeat(4,1fr)">
     <div class="feature-card">
       <div class="num" style="color:#C96840">01 — Simple pick</div>
-      <h4>Training and held-out</h4>
-      <p>Four rollouts of "Pick the red cube" — from a training replay to held-out episodes 50 and 100. The model successfully reaches and grasps the cube on every one.</p>
+      <h4>Single-object grasping</h4>
+      <p>Pick a red, blue, yellow, or green cube/lego from a variety of scenes and camera rigs — across four community datasets.</p>
     </div>
     <div class="feature-card">
-      <div class="num" style="color:#A07040">02 — Mid-episode recovery</div>
-      <h4>Resume from any state</h4>
-      <p>Six rollouts that start deep inside a trajectory — the descend, grasp, and lift phases of two held-out episodes. The model continues the task regardless of starting pose.</p>
-    </div>
-    <div class="feature-card">
-      <div class="num" style="color:#B8920A">03 — Pick and place</div>
+      <div class="num" style="color:#B8920A">02 — Pick and place</div>
       <h4>Container manipulation</h4>
-      <p>A full autoregressive rollout of picking the red cube and placing it in the bowl. Six seconds of imagined video and joint commands from a single initial frame.</p>
+      <p>Pick an object and place it in a bowl, bin, or transparent box. Tests trajectory planning beyond just grasping.</p>
     </div>
     <div class="feature-card">
-      <div class="num" style="color:#3D8A54">04 — Stacking</div>
+      <div class="num" style="color:#3D8A54">03 — Stacking</div>
       <h4>Two-object sequencing</h4>
-      <p>Stack the red cube on the blue one. The model has to plan a two-step trajectory — approach, grasp, lift, translate, align, release — entirely in imagination.</p>
+      <p>Stack the red cube on the blue one — requiring approach, grasp, lift, translate, align, and release in imagination.</p>
     </div>
     <div class="feature-card">
-      <div class="num" style="color:#2E6A99">05 — Novel instructions</div>
-      <h4>Language conditioning</h4>
-      <p>Same three scenes, language instructions the model never saw during training ("blue cube" instead of "red cube"). Tests whether the model actually attends to the language token.</p>
+      <div class="num" style="color:#D97757">04 — Multi-object</div>
+      <h4>Sequential manipulation</h4>
+      <p>Pick all red cubes and place them in the bowl — the model must plan a multi-step sequence for several objects.</p>
     </div>
     <div class="feature-card">
-      <div class="num" style="color:#6A4EA8">06 — Zero-shot task</div>
+      <div class="num" style="color:#7DA488">05 — Table cleanup</div>
+      <h4>Four object categories</h4>
+      <p>Pens, markers, tapes, and scissors — grab each and place into a pen holder. From <code>so101-table-cleanup</code>.</p>
+    </div>
+    <div class="feature-card">
+      <div class="num" style="color:#6A4EA8">06 — Deformable</div>
+      <h4>Cloth folding</h4>
+      <p>Fold a cloth — the only deformable manipulation task in the training mix, from <code>so101_cloth_folding1</code>.</p>
+    </div>
+    <div class="feature-card">
+      <div class="num" style="color:#A07040">07 — Mid-episode</div>
+      <h4>Resume from any state</h4>
+      <p>Six rollouts that start deep inside a trajectory — descend, grasp, and lift phases of held-out episodes.</p>
+    </div>
+    <div class="feature-card">
+      <div class="num" style="color:#5B8CB8">08 — Zero-shot</div>
       <h4>Out-of-distribution</h4>
-      <p>Eight samples on <code>so101_box_to_bowl_v2</code> — a dataset the model was never trained on. Demonstrates raw generalization from the aggregated SO-101 pretraining mix.</p>
+      <p>Eight samples on <code>so101_box_to_bowl_v2</code> — a dataset the model was never trained on.</p>
     </div>
   </div>
 </div>

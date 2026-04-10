@@ -1156,15 +1156,17 @@ table.data-table td.num { color: var(--teal); }
 /* ====== Hero carousel refinement ====== */
 .hero-carousel {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
   margin-top: 18px;
 }
-@media (max-width: 900px) { .hero-carousel { grid-template-columns: 1fr; } }
+@media (max-width: 1100px) { .hero-carousel { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 700px) { .hero-carousel { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 480px) { .hero-carousel { grid-template-columns: 1fr; } }
 .hero-clip {
   background: #fff;
   border: 1px solid var(--line);
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
   position: relative;
   transition: all .2s ease;
@@ -1183,25 +1185,37 @@ table.data-table td.num { color: var(--teal); }
   background: #0d0c0a;
 }
 .hero-clip .meta {
-  padding: 14px 18px 16px;
+  padding: 10px 12px 12px;
   border-top: 1px solid var(--line);
 }
 .hero-clip .meta .ep {
   font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
+  font-size: 9px;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent);
   font-weight: 600;
 }
 .hero-clip .meta .prompt {
   font-family: var(--font-serif);
-  font-size: 14.5px;
+  font-size: 12px;
   font-weight: 500;
   color: var(--ink);
   font-style: italic;
-  margin-top: 6px;
-  line-height: 1.4;
+  margin-top: 4px;
+  line-height: 1.35;
+}
+.hero-clip .meta .src-tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-top: 5px;
+  padding: 2px 6px;
+  background: var(--panel);
+  border-radius: 3px;
+  display: inline-block;
 }
 
 /* Subhead above each carousel row */

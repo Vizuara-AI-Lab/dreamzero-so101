@@ -52,7 +52,11 @@
         <span class="value">715</span>
       </div>
       <div class="score-pill">
-        <span class="label">Task categories</span>
+        <span class="label">Training tasks</span>
+        <span class="value">15</span>
+      </div>
+      <div class="score-pill">
+        <span class="label">Community datasets</span>
         <span class="value">6</span>
       </div>
       <div class="score-pill">
@@ -69,15 +73,17 @@
   <!-- Hero video carousel — training-data rollouts the model completes end-to-end -->
   <div class="carousel-section-head">
     <span class="cs-eyebrow">Imagined rollouts</span>
-    <h3 class="cs-title">Five training tasks the model imagines from a single frame.</h3>
+    <h3 class="cs-title">Fifteen training tasks across six community datasets — imagined from a single frame.</h3>
     <p class="cs-sub">Each video below was predicted autoregressively from one initial image plus the language instruction underneath it. No real robot was involved after frame 0. Every task is from the training distribution — the model executes the requested action against the actual scene in front of it.</p>
   </div>
   <section class="hero-carousel">
+    <!-- === whosricky/so101-megamix-v1 === -->
     <div class="hero-clip">
       <video src="gallery/ep000_train/rollout_front.mp4" autoplay loop muted playsinline></video>
       <div class="meta">
         <div class="ep" style="color:#C96840">Pick red cube</div>
         <div class="prompt">"Pick the red cube"</div>
+        <div class="src-tag">megamix</div>
       </div>
     </div>
     <div class="hero-clip">
@@ -85,13 +91,23 @@
       <div class="meta">
         <div class="ep" style="color:#5B8CB8">Pick blue cube</div>
         <div class="prompt">"Pick the blue cube"</div>
+        <div class="src-tag">megamix</div>
+      </div>
+    </div>
+    <div class="hero-clip">
+      <video src="gallery/mm_yellow_ep127/rollout_front.mp4" autoplay loop muted playsinline></video>
+      <div class="meta">
+        <div class="ep" style="color:#B8920A">Pick yellow cube</div>
+        <div class="prompt">"Pick the yellow cube"</div>
+        <div class="src-tag">megamix</div>
       </div>
     </div>
     <div class="hero-clip">
       <video src="gallery/ep245_train/rollout_front.mp4" autoplay loop muted playsinline></video>
       <div class="meta">
-        <div class="ep" style="color:#B8920A">Pick and place</div>
+        <div class="ep" style="color:#C4956A">Pick and place</div>
         <div class="prompt">"Pick the red cube and place it in the bowl"</div>
+        <div class="src-tag">megamix</div>
       </div>
     </div>
     <div class="hero-clip">
@@ -99,13 +115,92 @@
       <div class="meta">
         <div class="ep" style="color:#3D8A54">Stack objects</div>
         <div class="prompt">"Put the red cube on top of the blue cube"</div>
+        <div class="src-tag">megamix</div>
       </div>
     </div>
     <div class="hero-clip">
-      <video src="gallery/sort_rb_ep279/rollout_front.mp4" autoplay loop muted playsinline></video>
+      <video src="gallery/mm_pick_all_red_ep269/rollout_front.mp4" autoplay loop muted playsinline></video>
       <div class="meta">
-        <div class="ep" style="color:#6A4EA8">Sort by colour</div>
-        <div class="prompt">"Put red cubes on the right bowl and blue cubes on the left bowl"</div>
+        <div class="ep" style="color:#D97757">All red cubes to bowl</div>
+        <div class="prompt">"Pick all the red cubes and place them in the bowl"</div>
+        <div class="src-tag">megamix</div>
+      </div>
+    </div>
+    <div class="hero-clip">
+      <video src="gallery/mm_red_on_bowl_ep357/rollout_front.mp4" autoplay loop muted playsinline></video>
+      <div class="meta">
+        <div class="ep" style="color:#A07040">Red cubes on bowl</div>
+        <div class="prompt">"Put red cubes on the bowl"</div>
+        <div class="src-tag">megamix</div>
+      </div>
+    </div>
+    <!-- === lipsop/so101-block-in-bin-100ep === -->
+    <div class="hero-clip">
+      <video src="gallery/block_in_bin_ep0/rollout_front.mp4" autoplay loop muted playsinline></video>
+      <div class="meta">
+        <div class="ep" style="color:#5B8CB8">Lego block to bin</div>
+        <div class="prompt">"Grasp a lego block and put it in the bin."</div>
+        <div class="src-tag">block-in-bin</div>
+      </div>
+    </div>
+    <!-- === youliangtan/so101-table-cleanup === -->
+    <div class="hero-clip">
+      <video src="gallery/table_pens_ep0/rollout_front.mp4" autoplay loop muted playsinline></video>
+      <div class="meta">
+        <div class="ep" style="color:#7DA488">Grab pens</div>
+        <div class="prompt">"Grab pens and place into pen holder"</div>
+        <div class="src-tag">table-cleanup</div>
+      </div>
+    </div>
+    <div class="hero-clip">
+      <video src="gallery/table_markers_ep20/rollout_front.mp4" autoplay loop muted playsinline></video>
+      <div class="meta">
+        <div class="ep" style="color:#C4956A">Grab markers</div>
+        <div class="prompt">"Grab markers and place into pen holder"</div>
+        <div class="src-tag">table-cleanup</div>
+      </div>
+    </div>
+    <div class="hero-clip">
+      <video src="gallery/table_tapes_ep40/rollout_front.mp4" autoplay loop muted playsinline></video>
+      <div class="meta">
+        <div class="ep" style="color:#D97757">Grab tapes</div>
+        <div class="prompt">"Grab tapes and place into pen holder"</div>
+        <div class="src-tag">table-cleanup</div>
+      </div>
+    </div>
+    <div class="hero-clip">
+      <video src="gallery/table_scissor_ep60/rollout_front.mp4" autoplay loop muted playsinline></video>
+      <div class="meta">
+        <div class="ep" style="color:#A07040">Grab scissors</div>
+        <div class="prompt">"Grab scissor and place into pen holder"</div>
+        <div class="src-tag">table-cleanup</div>
+      </div>
+    </div>
+    <!-- === G3ND3K/so101_picking_up_green_lego_big === -->
+    <div class="hero-clip">
+      <video src="gallery/green_lego_ep0/rollout_front.mp4" autoplay loop muted playsinline></video>
+      <div class="meta">
+        <div class="ep" style="color:#3D8A54">Pick green lego</div>
+        <div class="prompt">"picking up green lego"</div>
+        <div class="src-tag">green-lego</div>
+      </div>
+    </div>
+    <!-- === lerobot/svla_so101_pickplace === -->
+    <div class="hero-clip">
+      <video src="gallery/pink_pickplace_ep0/rollout_front.mp4" autoplay loop muted playsinline></video>
+      <div class="meta">
+        <div class="ep" style="color:#9B7EC8">Pink lego to box</div>
+        <div class="prompt">"pink lego brick into the transparent box"</div>
+        <div class="src-tag">svla-pickplace</div>
+      </div>
+    </div>
+    <!-- === observabot/so101_cloth_folding1 === -->
+    <div class="hero-clip">
+      <video src="gallery/cloth_fold_ep0/rollout_front.mp4" autoplay loop muted playsinline></video>
+      <div class="meta">
+        <div class="ep" style="color:#6A4EA8">Fold cloth</div>
+        <div class="prompt">"Fold the cloth."</div>
+        <div class="src-tag">cloth-fold</div>
       </div>
     </div>
   </section>

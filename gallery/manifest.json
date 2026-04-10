@@ -16,20 +16,191 @@
     }
   },
   {
-    "tag": "sort_rb_ep279",
-    "episode": 279,
-    "category": "sort",
-    "task_summary": "two-bin colour sort",
-    "prompt": "Put red cubes on the right bowl and blue cubes on the left bowl",
+    "tag": "mm_yellow_ep127",
+    "episode": 127,
+    "category": "simple-pick",
+    "task_summary": "simple pick (yellow cube)",
+    "prompt": "Pick the yellow cube",
+    "prompt_kind": "training",
+    "type": "dreamgen",
+    "duration_sec": 6.0,
+    "thumbnail": "gallery/mm_yellow_ep127/thumbnail.jpg",
+    "videos": {
+      "front": "gallery/mm_yellow_ep127/rollout_front.mp4",
+      "top": "gallery/mm_yellow_ep127/rollout_top.mp4",
+      "gripper": "gallery/mm_yellow_ep127/rollout_gripper.mp4"
+    },
+    "source_dataset": "whosricky/so101-megamix-v1"
+  },
+  {
+    "tag": "mm_pick_all_red_ep269",
+    "episode": 269,
+    "category": "multi-object",
+    "task_summary": "pick all red cubes into bowl",
+    "prompt": "Pick all the red cubes and place them in the bowl",
     "prompt_kind": "training",
     "type": "dreamgen",
     "duration_sec": 3.0,
-    "thumbnail": "gallery/sort_rb_ep279/thumbnail.jpg",
+    "thumbnail": "gallery/mm_pick_all_red_ep269/thumbnail.jpg",
     "videos": {
-      "front": "gallery/sort_rb_ep279/rollout_front.mp4",
-      "top": "gallery/sort_rb_ep279/rollout_top.mp4",
-      "gripper": "gallery/sort_rb_ep279/rollout_gripper.mp4"
-    }
+      "front": "gallery/mm_pick_all_red_ep269/rollout_front.mp4",
+      "top": "gallery/mm_pick_all_red_ep269/rollout_top.mp4",
+      "gripper": "gallery/mm_pick_all_red_ep269/rollout_gripper.mp4"
+    },
+    "source_dataset": "whosricky/so101-megamix-v1"
+  },
+  {
+    "tag": "mm_red_on_bowl_ep357",
+    "episode": 357,
+    "category": "multi-object",
+    "task_summary": "put red cubes on bowl",
+    "prompt": "Put red cubes on the bowl",
+    "prompt_kind": "training",
+    "type": "dreamgen",
+    "duration_sec": 4.0,
+    "thumbnail": "gallery/mm_red_on_bowl_ep357/thumbnail.jpg",
+    "videos": {
+      "front": "gallery/mm_red_on_bowl_ep357/rollout_front.mp4",
+      "top": "gallery/mm_red_on_bowl_ep357/rollout_top.mp4",
+      "gripper": "gallery/mm_red_on_bowl_ep357/rollout_gripper.mp4"
+    },
+    "source_dataset": "whosricky/so101-megamix-v1"
+  },
+  {
+    "tag": "block_in_bin_ep0",
+    "episode": 0,
+    "category": "pick-place",
+    "task_summary": "grasp lego block into bin",
+    "prompt": "Grasp a lego block and put it in the bin.",
+    "prompt_kind": "training",
+    "type": "dreamgen",
+    "duration_sec": 4.0,
+    "thumbnail": "gallery/block_in_bin_ep0/thumbnail.jpg",
+    "videos": {
+      "front": "gallery/block_in_bin_ep0/rollout_front.mp4",
+      "top": "gallery/block_in_bin_ep0/rollout_top.mp4",
+      "gripper": "gallery/block_in_bin_ep0/rollout_gripper.mp4"
+    },
+    "source_dataset": "lipsop/so101-block-in-bin-100ep"
+  },
+  {
+    "tag": "table_pens_ep0",
+    "episode": 0,
+    "category": "table-cleanup",
+    "task_summary": "grab pens into holder",
+    "prompt": "Grab pens and place into pen holder",
+    "prompt_kind": "training",
+    "type": "dreamgen",
+    "duration_sec": 3.0,
+    "thumbnail": "gallery/table_pens_ep0/thumbnail.jpg",
+    "videos": {
+      "front": "gallery/table_pens_ep0/rollout_front.mp4",
+      "top": "gallery/table_pens_ep0/rollout_top.mp4",
+      "gripper": "gallery/table_pens_ep0/rollout_gripper.mp4"
+    },
+    "source_dataset": "youliangtan/so101-table-cleanup"
+  },
+  {
+    "tag": "table_markers_ep20",
+    "episode": 20,
+    "category": "table-cleanup",
+    "task_summary": "grab markers into holder",
+    "prompt": "Grab markers and place into pen holder",
+    "prompt_kind": "training",
+    "type": "dreamgen",
+    "duration_sec": 3.0,
+    "thumbnail": "gallery/table_markers_ep20/thumbnail.jpg",
+    "videos": {
+      "front": "gallery/table_markers_ep20/rollout_front.mp4",
+      "top": "gallery/table_markers_ep20/rollout_top.mp4",
+      "gripper": "gallery/table_markers_ep20/rollout_gripper.mp4"
+    },
+    "source_dataset": "youliangtan/so101-table-cleanup"
+  },
+  {
+    "tag": "table_tapes_ep40",
+    "episode": 40,
+    "category": "table-cleanup",
+    "task_summary": "grab tapes into holder",
+    "prompt": "Grab tapes and place into pen holder",
+    "prompt_kind": "training",
+    "type": "dreamgen",
+    "duration_sec": 3.0,
+    "thumbnail": "gallery/table_tapes_ep40/thumbnail.jpg",
+    "videos": {
+      "front": "gallery/table_tapes_ep40/rollout_front.mp4",
+      "top": "gallery/table_tapes_ep40/rollout_top.mp4",
+      "gripper": "gallery/table_tapes_ep40/rollout_gripper.mp4"
+    },
+    "source_dataset": "youliangtan/so101-table-cleanup"
+  },
+  {
+    "tag": "table_scissor_ep60",
+    "episode": 60,
+    "category": "table-cleanup",
+    "task_summary": "grab scissors into holder",
+    "prompt": "Grab scissor and place into pen holder",
+    "prompt_kind": "training",
+    "type": "dreamgen",
+    "duration_sec": 3.0,
+    "thumbnail": "gallery/table_scissor_ep60/thumbnail.jpg",
+    "videos": {
+      "front": "gallery/table_scissor_ep60/rollout_front.mp4",
+      "top": "gallery/table_scissor_ep60/rollout_top.mp4",
+      "gripper": "gallery/table_scissor_ep60/rollout_gripper.mp4"
+    },
+    "source_dataset": "youliangtan/so101-table-cleanup"
+  },
+  {
+    "tag": "green_lego_ep0",
+    "episode": 0,
+    "category": "simple-pick",
+    "task_summary": "pick up green lego",
+    "prompt": "picking up green lego",
+    "prompt_kind": "training",
+    "type": "dreamgen",
+    "duration_sec": 4.0,
+    "thumbnail": "gallery/green_lego_ep0/thumbnail.jpg",
+    "videos": {
+      "front": "gallery/green_lego_ep0/rollout_front.mp4",
+      "top": "gallery/green_lego_ep0/rollout_top.mp4",
+      "gripper": "gallery/green_lego_ep0/rollout_gripper.mp4"
+    },
+    "source_dataset": "G3ND3K/so101_picking_up_green_lego_big"
+  },
+  {
+    "tag": "pink_pickplace_ep0",
+    "episode": 0,
+    "category": "pick-place",
+    "task_summary": "pink lego into transparent box",
+    "prompt": "pink lego brick into the transparent box",
+    "prompt_kind": "training",
+    "type": "dreamgen",
+    "duration_sec": 6.0,
+    "thumbnail": "gallery/pink_pickplace_ep0/thumbnail.jpg",
+    "videos": {
+      "front": "gallery/pink_pickplace_ep0/rollout_front.mp4",
+      "top": "gallery/pink_pickplace_ep0/rollout_top.mp4",
+      "gripper": "gallery/pink_pickplace_ep0/rollout_gripper.mp4"
+    },
+    "source_dataset": "lerobot/svla_so101_pickplace"
+  },
+  {
+    "tag": "cloth_fold_ep0",
+    "episode": 0,
+    "category": "deformable",
+    "task_summary": "fold cloth",
+    "prompt": "Fold the cloth.",
+    "prompt_kind": "training",
+    "type": "dreamgen",
+    "duration_sec": 4.0,
+    "thumbnail": "gallery/cloth_fold_ep0/thumbnail.jpg",
+    "videos": {
+      "front": "gallery/cloth_fold_ep0/rollout_front.mp4",
+      "top": "gallery/cloth_fold_ep0/rollout_top.mp4",
+      "gripper": "gallery/cloth_fold_ep0/rollout_gripper.mp4"
+    },
+    "source_dataset": "observabot/so101_cloth_folding1"
   },
   {
     "tag": "ep000_train",
